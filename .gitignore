@@ -1,0 +1,30 @@
+# Eclipse
+.metadata/
+*.log
+*.bak
+*.swp
+*.swo
+*.tmp
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.db
+*.h2.db
+*.sqlite
+
+# Eclipse project files
+/.settings/
+/.project
+/.classpath
+
+# IntelliJ IDEA files
+.idea/
+
+# Mac OS files
+.DS_Store
+
+# Windows thumbnail cache
+Thumbs.db
