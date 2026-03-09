@@ -15,25 +15,25 @@ public class Generador_esdeveniments {
         // Pesos/probabilitats (exemple coherent amb el document: ràpid baixa, lent alta) :contentReference[oaicite:1]{index=1}
         esdeveniments.add(new Esdeveniment(
                 Esdeveniment.TipusEsdeveniment.OBTENIR_PEIX,
-                "Has trobat un peix! 🐟",
+                "Has encontrado un pescado ",
                 0.25
         ));
 
         esdeveniments.add(new Esdeveniment(
                 Esdeveniment.TipusEsdeveniment.OBTENIR_BOLES_NEU,
-                "Reculls boles de neu! ❄️",
+                "Adquieres bolas de nieve ",
                 0.45
         ));
 
         esdeveniments.add(new Esdeveniment(
                 Esdeveniment.TipusEsdeveniment.OBTENIR_DAU_LENT,
-                "Aconsegueixes un dau lent 🐢",
+                "Conseguiste un dado muy lentoooo ",
                 0.25
         ));
 
         esdeveniments.add(new Esdeveniment(
                 Esdeveniment.TipusEsdeveniment.OBTENIR_DAU_RAPID,
-                "Aconsegueixes un dau ràpid ⚡",
+                "Conisguiste un rapido mas rapido que flash ",
                 0.05
         ));
     }
