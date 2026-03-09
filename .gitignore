@@ -28,3 +28,4 @@
 
 # Windows thumbnail cache
 Thumbs.db
+/bin/
