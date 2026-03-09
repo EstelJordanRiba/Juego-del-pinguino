@@ -17,8 +17,7 @@
 
 # Eclipse project files
 /.settings/
-/.project
-/.classpath
+/bin/
 
 # IntelliJ IDEA files
 .idea/
