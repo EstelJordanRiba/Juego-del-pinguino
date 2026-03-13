@@ -1,5 +1,14 @@
 package model;
 import java.util.Objects;
+/**
+ * Classe que representa un jugador dins la partida del Joc d'en Pingu.
+ * 
+ * Gestiona:
+ * - Posició al taulell
+ * - Estat del jugador
+ * - Inventari d'objectes
+ * - Accions com moure's, retrocedir o utilitzar ítems
+ */
 
 public class Jugador {
 

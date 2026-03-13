@@ -1,32 +1,52 @@
 package controller;
-import model.*;
+
+import model.Partida;
+import model.Jugador;
+import model.Taulell;
+import model.Casella;
 
 public class PartidaController {
 
     private Partida partida;
+    private TaulellController taulellController;
 
     public PartidaController(Partida partida) {
         this.partida = partida;
+        this.taulellController = new TaulellController(partida.getTaulell());
     }
 
+    /**
+     * Inicia la partida.
+     */
     public void iniciarPartida() {
-        partida.iniciarPartida();
+
+        System.out.println("La partida ha començat!");
+
+        while (!partida.hiHaGuanyador()) {
+
+            Jugador jugadorActual = partida.getJugadorActual();
+
+            System.out.println("Torn de: " + jugadorActual.getNickname());
+
+            executarTorn(jugadorActual);
+
+            partida.passarTorn();
+        }
+
+        System.out.println("Guanyador: " + partida.getGuanyador().getNickname());
     }
 
-    public Jugador obtenerJugadorActual() {
-        return partida.obtenirJugadorActual();
-    }
+    /**
+     * Executa el torn d’un jugador.
+     */
+    private void executarTorn(Jugador jugador) {
 
-    public void tirarDau(Dau dau) {
-        partida.jugarTornTirarDau(dau);
-    }
+        int resultatDau = partida.tirarDau();
 
-    public boolean usarBolaNeu(Jugador objetivo) {
-        return partida.jugarTornBolaNeu(objetivo);
-    }
+        System.out.println(jugador.getNickname() + " ha tret: " + resultatDau);
 
-    public void siguienteTurno() {
-        partida.seguentTorn();
-    }
+        jugador.moure(resultatDau, partida.getTaulell().getNumCaselles());
 
+        taulellController.aplicarEfecteCasella(jugador, partida);
+    }
 }

@@ -16,16 +16,16 @@ public class Partida {
     // =====================
     // ATRIBUTS
     // =====================
+
     private int idPartida;
     private List<Jugador> jugadors;
     private Taulell taulell;
 
-    private int indexTornActual; // índex dins jugadors
+    private int indexTornActual;
     private EstatPartida estat;
 
     private Generador_esdeveniments generadorEsdeveniments;
 
-    // Historial bàsic (després ho persistim a BD)
     private List<String> historialAccions;
 
     // =====================
@@ -33,19 +33,25 @@ public class Partida {
     // =====================
 
     public Partida(int idPartida, Taulell taulell) {
+
         this.idPartida = idPartida;
         this.taulell = taulell;
+
         this.jugadors = new ArrayList<>();
         this.indexTornActual = 0;
+
         this.estat = EstatPartida.NO_INICIADA;
+
         this.generadorEsdeveniments = new Generador_esdeveniments();
         this.historialAccions = new ArrayList<>();
     }
 
     public Partida() {
+
         this.jugadors = new ArrayList<>();
         this.historialAccions = new ArrayList<>();
         this.generadorEsdeveniments = new Generador_esdeveniments();
+
         this.estat = EstatPartida.NO_INICIADA;
     }
 
@@ -86,139 +92,212 @@ public class Partida {
     // =====================
 
     public void afegirJugador(Jugador jugador) {
+
         if (estat != EstatPartida.NO_INICIADA) {
             throw new IllegalStateException("No pots afegir jugadors amb la partida en curs.");
         }
-        if (jugador == null) throw new IllegalArgumentException("Jugador null.");
+
+        if (jugador == null) {
+            throw new IllegalArgumentException("Jugador null.");
+        }
+
         jugadors.add(jugador);
     }
 
     public void iniciarPartida() {
+
         if (jugadors.isEmpty()) {
             throw new IllegalStateException("No hi ha jugadors a la partida.");
         }
+
         this.indexTornActual = 0;
         this.estat = EstatPartida.EN_CURS;
+
         registrar("Partida iniciada amb " + jugadors.size() + " jugadors.");
     }
 
+    // =====================
+    // TORN ACTUAL
+    // =====================
+
     public Jugador obtenirJugadorActual() {
-        if (jugadors.isEmpty()) return null;
+
+        if (jugadors.isEmpty()) {
+            return null;
+        }
+
         return jugadors.get(indexTornActual);
     }
 
     public void seguentTorn() {
-        if (estat != EstatPartida.EN_CURS) return;
 
-        // passa al següent jugador ACTIU (evita congelats/eliminats)
+        if (estat != EstatPartida.EN_CURS) {
+            return;
+        }
+
         int intents = 0;
+
         do {
+
             indexTornActual = (indexTornActual + 1) % jugadors.size();
+
             intents++;
-            if (intents > jugadors.size()) break; // evita bucle infinit
+
+            if (intents > jugadors.size()) {
+                break;
+            }
+
         } while (obtenirJugadorActual().getEstat() != Jugador.EstatJugador.ACTIU);
 
         registrar("Següent torn -> " + obtenirJugadorActual().getNickname());
     }
-    
+
     public void executarTornActual() {
 
         Jugador jugador = obtenirJugadorActual();
 
         if (jugador instanceof FocaIA) {
+
             ((FocaIA) jugador).decidirAccio(this);
+
         } else {
+
             // Espera acció del jugador humà
         }
     }
-    
+
     // =====================
-    // FLUX D'UN TORN (document) :contentReference[oaicite:1]{index=1}
+    // FLUX DEL TORN
     // =====================
 
-    /**
-     * Acció: tirar un dau (normal/rapid/lent) i aplicar efecte de casella.
-     * Nota: el consum del dau (inventari) el pots gestionar al controller si vols.
-     */
     public void jugarTornTirarDau(Dau dau) {
+
         validarEnCurs();
 
         Jugador jugador = obtenirJugadorActual();
 
         int passos = jugador.tirarDau(dau);
+
         registrar(jugador.getNickname() + " tira dau " + dau.getTipus() + " -> " + passos);
 
         if (passos <= 0) {
-            // si el dau falla per probabilitat, no es mou
+
             seguentTorn();
             return;
         }
 
         jugador.moure(passos, taulell.getNumCaselles());
+
         registrar(jugador.getNickname() + " es mou fins la posició " + jugador.getPosicioActual());
 
         aplicarCasellaActual(jugador);
 
-        // comprovar guanyador
         if (jugador.esGuanyador(taulell.getNumCaselles())) {
+
             estat = EstatPartida.FINALITZADA;
+
             registrar("🏆 Guanyador: " + jugador.getNickname());
+
             return;
         }
 
         seguentTorn();
     }
 
-    /**
-     * Acció: utilitzar bola de neu contra un objectiu.
-     * (No mou el jugador; només aplica efecte sobre rival)
-     */
     public boolean jugarTornBolaNeu(Jugador objectiu) {
+
         validarEnCurs();
 
         Jugador atacant = obtenirJugadorActual();
 
         if (objectiu == null) return false;
+
         if (Objects.equals(atacant, objectiu)) return false;
 
         boolean ok = atacant.utilitzarBolaNeu(objectiu);
+
         if (ok) {
-            registrar(atacant.getNickname() + " llança bola de neu a " + objectiu.getNickname() +
-                    " -> " + objectiu.getPosicioActual());
+
+            registrar(atacant.getNickname() + " llança bola de neu a " + objectiu.getNickname());
+
             seguentTorn();
+
         } else {
+
             registrar(atacant.getNickname() + " intenta bola de neu però no en té.");
         }
+
         return ok;
     }
 
     private void aplicarCasellaActual(Jugador jugador) {
+
         Casella casella = taulell.obtenirCasella(jugador.getPosicioActual());
+
         if (casella == null) {
+
             registrar("No hi ha casella definida a la posició " + jugador.getPosicioActual());
             return;
         }
 
-        registrar("Cau a casella: " + casella.getClass().getSimpleName() + " (pos " + casella.getPosicio() + ")");
+        registrar("Cau a casella: " + casella.getClass().getSimpleName());
+
         casella.aplicarEfecte(jugador, this);
+
         registrar("Després d'efecte -> posició " + jugador.getPosicioActual());
     }
 
     // =====================
-    // PERSISTÈNCIA (HOOKS)
+    // MÈTODES PER CONTROLLERS
     // =====================
 
-    /**
-     * Aquí cridaràs PartidaDAO, JugadorDAO, InventariDAO, TaulellDAO...
-     * (al document diu guardar estat en BD i xifrat) :contentReference[oaicite:2]{index=2}
-     */
+    public Jugador getJugadorActual() {
+        return obtenirJugadorActual();
+    }
+
+    public void passarTorn() {
+        seguentTorn();
+    }
+
+    public int tirarDau() {
+        return (int) (Math.random() * 6) + 1;
+    }
+
+    public boolean hiHaGuanyador() {
+
+        for (Jugador j : jugadors) {
+
+            if (j.esGuanyador(taulell.getNumCaselles())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public Jugador getGuanyador() {
+
+        for (Jugador j : jugadors) {
+
+            if (j.esGuanyador(taulell.getNumCaselles())) {
+                return j;
+            }
+        }
+
+        return null;
+    }
+
+    // =====================
+    // PERSISTÈNCIA (DAO)
+    // =====================
+
     public void guardarEstat() {
-        // TODO: implementar amb DAOs
+
         registrar("guardarEstat() pendent d'implementar amb BD/DAO.");
     }
 
     public void carregarPartida(int idPartida) {
-        // TODO: implementar amb DAOs
+
         registrar("carregarPartida(" + idPartida + ") pendent d'implementar amb BD/DAO.");
     }
 
@@ -227,11 +306,14 @@ public class Partida {
     // =====================
 
     private void registrar(String missatge) {
+
         historialAccions.add(LocalDateTime.now() + " - " + missatge);
     }
 
     private void validarEnCurs() {
+
         if (estat != EstatPartida.EN_CURS) {
+
             throw new IllegalStateException("La partida no està en curs.");
         }
     }
