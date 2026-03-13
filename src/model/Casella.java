@@ -1,4 +1,5 @@
-package Pingu;
+package model;
+
 public abstract class Casella {
 
 protected int idCasella;

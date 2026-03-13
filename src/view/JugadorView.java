@@ -1,4 +1,4 @@
-package Pingu;
+package view;
 
 import model.Jugador;
 

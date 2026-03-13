@@ -1,4 +1,5 @@
-package Pingu;
+package model;
+
 public class Casella_forat extends Casella {
 private int desti;
 public Casella_forat(int idCasella, int posicio, int desti) {

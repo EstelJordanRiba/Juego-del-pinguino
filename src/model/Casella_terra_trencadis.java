@@ -1,4 +1,5 @@
-package Pingu;
+package model;
+
 public class Casella_terra_trencadis extends Casella {
 public Casella_terra_trencadis(int idCasella, int posicio) {
    super(idCasella, posicio);

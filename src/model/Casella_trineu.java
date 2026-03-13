@@ -1,4 +1,5 @@
-package Pingu;
+package model;
+
 public class Casella_trineu extends Casella {
 public Casella_trineu(int idCasella, int posicio) {
    super(idCasella, posicio);

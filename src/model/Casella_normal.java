@@ -1,4 +1,5 @@
-package Pingu;
+package model;
+
 public class Casella_normal extends Casella {
 public Casella_normal(int idCasella, int posicio) {
    super(idCasella, posicio);

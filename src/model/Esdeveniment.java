@@ -1,4 +1,4 @@
-package Pingu;
+package model;
 
 public class Esdeveniment {
 

@@ -1,4 +1,4 @@
-package Pingu;
+package view;
 import model.Partida;
 public class PartidaView {
 
