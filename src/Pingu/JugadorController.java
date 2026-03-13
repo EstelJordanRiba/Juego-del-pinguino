@@ -1,6 +1,5 @@
 package Pingu;
 
-
 import model.*;
 
 public class JugadorController {
