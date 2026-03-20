@@ -6,29 +6,27 @@ import java.util.Random;
 
 public class Taulell {
 
-    private int numCaselles;               // 50 o més (document) :contentReference[oaicite:1]{index=1}
-    private List<Casella> llistaCaselles;  // index = posicio
+    private int numCaselles;
+    private List<Casella> caselles;
 
     private static final Random random = new Random();
 
-    // Percentatges orientatius (ajustables)
+    // Percentatges
     private static final double P_OS = 0.08;
     private static final double P_FORAT = 0.12;
     private static final double P_TRINEU = 0.10;
     private static final double P_INTERROGANT = 0.14;
-    // La resta -> normal
 
     public Taulell(int numCaselles) {
         if (numCaselles < 50) {
             throw new IllegalArgumentException("El taulell ha de tenir 50 caselles o més.");
         }
         this.numCaselles = numCaselles;
-        this.llistaCaselles = new ArrayList<>(numCaselles + 1);
+        this.caselles = new ArrayList<>(numCaselles + 1);
         generarTaulellAleatori();
     }
 
     public Taulell() {
-        // per defecte
         this(50);
     }
 
@@ -36,60 +34,64 @@ public class Taulell {
         return numCaselles;
     }
 
-    public List<Casella> getLlistaCaselles() {
-        return llistaCaselles;
+    public List<Casella> getCaselles() {
+        return caselles;
     }
 
-    /**
-     * Genera un taulell aleatori de 0..numCaselles (incloent 0).
-     * - posició 0: normal (inici)
-     * - última posició: normal (final)
-     */
-    public final void generarTaulellAleatori() {
-        llistaCaselles.clear();
+    // =========================
+    // GENERACIÓ TAULELL
+    // =========================
 
-        // Reservem posicions 0..numCaselles
+    public final void generarTaulellAleatori() {
+        caselles.clear();
+
+        // Inicialitzar posicions
         for (int pos = 0; pos <= numCaselles; pos++) {
-            llistaCaselles.add(null);
+            caselles.add(null);
         }
 
-        // Inici i final sempre normals
-        llistaCaselles.set(0, CasellaFactory.crearNormal(0, 0));
-        llistaCaselles.set(numCaselles, CasellaFactory.crearNormal(numCaselles, numCaselles));
+        // Inici i final
+        caselles.set(0, CasellaFactory.crearNormal(0, 0));
+        caselles.set(numCaselles, CasellaFactory.crearNormal(numCaselles, numCaselles));
 
-        // Omplir la resta
+        // Generació aleatòria
         for (int pos = 1; pos < numCaselles; pos++) {
 
-            // Evitem que hi hagi forats massa “besties” a l’inici
             boolean zonaInicial = pos < 5;
 
             Casella casella = CasellaFactory.crearAleatoria(pos, zonaInicial, numCaselles);
-            llistaCaselles.set(pos, casella);
+            caselles.set(pos, casella);
         }
 
-        // Petita garantia: mínim 2 trineus (si no, buscarSeguentTrineu no té gràcia)
         assegurarMinimTrineus(2);
     }
 
-    /**
-     * Retorna la casella de la posició.
-     */
+    // =========================
+    // ACCESSOS
+    // =========================
+
     public Casella obtenirCasella(int posicio) {
         if (posicio < 0) posicio = 0;
         if (posicio > numCaselles) posicio = numCaselles;
-        return llistaCaselles.get(posicio);
+        return caselles.get(posicio);
     }
 
-    /**
-     * Busca el següent trineu des de la posicióActual.
-     * Si no n’hi ha, retorna la mateixa posició (no es mou).
-     */
+    // 🔥 IMPORTANT (evita errors amb altres classes)
+    public Casella getCasella(int posicio) {
+        return obtenirCasella(posicio);
+    }
+
+    // =========================
+    // MECÀNIQUES
+    // =========================
+
     public int buscarSeguentTrineu(int posicioActual) {
+
         if (posicioActual < 0) posicioActual = 0;
         if (posicioActual > numCaselles) posicioActual = numCaselles;
 
         for (int p = posicioActual + 1; p <= numCaselles; p++) {
-            Casella c = llistaCaselles.get(p);
+            Casella c = caselles.get(p);
             if (c instanceof Casella_trineu) {
                 return p;
             }
@@ -98,16 +100,26 @@ public class Taulell {
     }
 
     private void assegurarMinimTrineus(int minim) {
+
         int count = 0;
-        for (Casella c : llistaCaselles) {
+
+        for (Casella c : caselles) {
             if (c instanceof Casella_trineu) count++;
         }
 
         while (count < minim) {
-            int pos = 1 + random.nextInt(numCaselles - 1); // evita 0 i final
-            // no sobrescrivim forats “crítics” si no vols; aquí ho fem simple:
-            llistaCaselles.set(pos, CasellaFactory.crearTrineu(pos, pos));
-            count++;
+
+            int pos = 1 + random.nextInt(numCaselles - 1);
+
+            Casella actual = caselles.get(pos);
+
+            // Evitem sobrescriure caselles "dures"
+            if (!(actual instanceof Casella_Ós) &&
+                !(actual instanceof Casella_forat)) {
+
+                caselles.set(pos, CasellaFactory.crearTrineu(pos, pos));
+                count++;
+            }
         }
     }
 
@@ -115,22 +127,22 @@ public class Taulell {
     public String toString() {
         return "Taulell{" +
                 "numCaselles=" + numCaselles +
-                ", caselles=" + (llistaCaselles.size()) +
+                ", caselles=" + caselles.size() +
                 '}';
     }
 
-    // ==========================
-    // FACTORY (nota alta)
-    // ==========================
+    // =========================
+    // FACTORY (PUNT NOTA ALTA)
+    // =========================
+
     public static class CasellaFactory {
 
-        private static int idSeq = 1; // id incremental simple (després BD)
+        private static int idSeq = 1;
 
         public static Casella crearAleatoria(int pos, boolean zonaInicial, int numCaselles) {
 
             double r = random.nextDouble();
 
-            // A la zona inicial, reduïm forats/ós
             double pOs = zonaInicial ? P_OS / 2 : P_OS;
             double pForat = zonaInicial ? P_FORAT / 2 : P_FORAT;
 
@@ -140,9 +152,7 @@ public class Taulell {
             r -= pOs;
 
             if (r < pForat) {
-                // destí: "forat d’abans" (document) :contentReference[oaicite:2]{index=2}
-                // Triem un destí anterior raonable: entre 0 i pos-1
-                int desti = (pos <= 1) ? 0 : random.nextInt(pos); // [0..pos-1]
+                int desti = (pos <= 1) ? 0 : random.nextInt(pos);
                 return crearForat(idSeq++, pos, desti);
             }
             r -= pForat;

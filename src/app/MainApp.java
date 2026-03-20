@@ -1,27 +1,18 @@
-	package app;
+package app;
 
-	import javafx.application.Application;
-	import javafx.fxml.FXMLLoader;
-	import javafx.scene.Scene;
-	import javafx.stage.Stage;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import vista.SceneManager;
 
-	public class MainApp extends Application {
+public class MainApp extends Application {
 
-	    @Override
-	    public void start(Stage stage) throws Exception {
-	        FXMLLoader loader = new FXMLLoader(
-	                getClass().getResource("/fxml/menu.fxml")
-	        );
+    @Override
+    public void start(Stage primaryStage) {
+        SceneManager.init(primaryStage);
+        SceneManager.mostrarMenu();
+    }
 
-	        Scene scene = new Scene(loader.load(), 900, 650);
-	        stage.setTitle("El Joc d'en Pingu");
-	        stage.setScene(scene);
-	        stage.show();
-	    }
-
-	    public static void main(String[] args) {
-	        launch(args);
-	    }
-	}
-	
-
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
