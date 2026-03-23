@@ -4,14 +4,12 @@ import java.util.Objects;
 
 public class Jugador {
 
-    // ENUM
     public enum EstatJugador {
         ACTIU,
         ELIMINAT,
         CONGELAT
     }
 
-    // ATRIBUTOS
     private int idJugador;
     private String nickname;
     private int posicioActual;
@@ -19,7 +17,9 @@ public class Jugador {
     private EstatJugador estat;
     private Inventari inventari;
 
-    // CONSTRUCTORES
+    // 🔥 EXTRA PRO
+    private int tornsCongelat = 0;
+
     public Jugador(int idJugador, String nickname, int ordreTorn) {
         this.idJugador = idJugador;
         this.nickname = nickname;
@@ -35,32 +35,21 @@ public class Jugador {
         this.inventari = new Inventari();
     }
 
+    // =========================
     // GETTERS
-    public int getIdJugador() {
-        return idJugador;
-    }
+    // =========================
 
-    public String getNickname() {
-        return nickname;
-    }
+    public int getIdJugador() { return idJugador; }
+    public String getNickname() { return nickname; }
+    public int getPosicioActual() { return posicioActual; }
+    public int getOrdreTorn() { return ordreTorn; }
+    public EstatJugador getEstat() { return estat; }
+    public Inventari getInventari() { return inventari; }
 
-    public int getPosicioActual() {
-        return posicioActual;
-    }
-
-    public int getOrdreTorn() {
-        return ordreTorn;
-    }
-
-    public EstatJugador getEstat() {
-        return estat;
-    }
-
-    public Inventari getInventari() {
-        return inventari;
-    }
-
+    // =========================
     // SETTERS
+    // =========================
+
     public void setEstat(EstatJugador estat) {
         this.estat = estat;
     }
@@ -75,7 +64,33 @@ public class Jugador {
         }
     }
 
-    // LÓGICA
+    // =========================
+    // LÒGICA DE TORN
+    // =========================
+
+    public boolean potJugar() {
+
+        if (estat == EstatJugador.CONGELAT) {
+
+            if (tornsCongelat > 0) {
+                tornsCongelat--;
+                return false;
+            } else {
+                estat = EstatJugador.ACTIU;
+            }
+        }
+
+        return estat == EstatJugador.ACTIU;
+    }
+
+    public void congelar(int torns) {
+        this.estat = EstatJugador.CONGELAT;
+        this.tornsCongelat = torns;
+    }
+
+    // =========================
+    // ACCIONS
+    // =========================
 
     public int tirarDau(Dau dau) {
         return dau.tirar();
@@ -112,6 +127,10 @@ public class Jugador {
         return inventari.gastarPeix();
     }
 
+    // =========================
+    // INVENTARI
+    // =========================
+
     public void afegirPeix() {
         inventari.afegirPeix();
     }
@@ -128,7 +147,9 @@ public class Jugador {
         inventari.afegirDauLent();
     }
 
+    // =========================
     // OBJECT
+    // =========================
 
     @Override
     public String toString() {

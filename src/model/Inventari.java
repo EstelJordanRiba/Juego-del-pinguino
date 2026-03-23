@@ -2,24 +2,15 @@ package model;
 
 public class Inventari {
 
-    // CONSTANTS DE LÍMIT
-  
-
     private static final int MAX_DAUS_TOTAL = 3;
     private static final int MAX_PEIXOS = 2;
     private static final int MAX_BOLES_NEU = 6;
-
-    // ATRIBUTS
-    
 
     private int dausNormals;
     private int dausRapids;
     private int dausLents;
     private int peixos;
     private int bolesNeu;
-
-    // CONSTRUCTOR
-   
 
     public Inventari() {
         this.dausNormals = 0;
@@ -29,34 +20,23 @@ public class Inventari {
         this.bolesNeu = 0;
     }
 
+    // =========================
     // GETTERS
+    // =========================
 
-    public int getDausNormals() {
-        return dausNormals;
-    }
-
-    public int getDausRapids() {
-        return dausRapids;
-    }
-
-    public int getDausLents() {
-        return dausLents;
-    }
-
-    public int getPeixos() {
-        return peixos;
-    }
-
-    public int getBolesNeu() {
-        return bolesNeu;
-    }
+    public int getDausNormals() { return dausNormals; }
+    public int getDausRapids() { return dausRapids; }
+    public int getDausLents() { return dausLents; }
+    public int getPeixos() { return peixos; }
+    public int getBolesNeu() { return bolesNeu; }
 
     public int getTotalDaus() {
         return dausNormals + dausRapids + dausLents;
     }
 
-
+    // =========================
     // AFEGIR ITEMS
+    // =========================
 
     public boolean afegirPeix() {
         if (peixos < MAX_PEIXOS) {
@@ -70,11 +50,7 @@ public class Inventari {
         if (quantitat <= 0) return false;
 
         int novaQuantitat = bolesNeu + quantitat;
-        if (novaQuantitat > MAX_BOLES_NEU) {
-            bolesNeu = MAX_BOLES_NEU;
-        } else {
-            bolesNeu = novaQuantitat;
-        }
+        bolesNeu = Math.min(novaQuantitat, MAX_BOLES_NEU);
         return true;
     }
 
@@ -102,9 +78,10 @@ public class Inventari {
         return false;
     }
 
-    
+    // =========================
     // GASTAR ITEMS
-   
+    // =========================
+
     public boolean gastarPeix() {
         if (peixos > 0) {
             peixos--;
@@ -145,18 +122,19 @@ public class Inventari {
         return false;
     }
 
+    // =========================
     // UTILITATS
+    // =========================
 
-    public boolean teBolesNeu() {
-        return bolesNeu > 0;
-    }
+    public boolean teBolesNeu() { return bolesNeu > 0; }
+    public boolean tePeixos() { return peixos > 0; }
+    public boolean teDaus() { return getTotalDaus() > 0; }
 
-    public boolean tePeixos() {
-        return peixos > 0;
-    }
-
-    public boolean teDaus() {
-        return getTotalDaus() > 0;
+    // 🔥 EXTRA PRO (molt útil)
+    public boolean inventariPle() {
+        return getTotalDaus() >= MAX_DAUS_TOTAL &&
+               peixos >= MAX_PEIXOS &&
+               bolesNeu >= MAX_BOLES_NEU;
     }
 
     @Override

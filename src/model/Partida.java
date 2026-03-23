@@ -14,7 +14,6 @@ public class Partida {
 
     private GeneradorEsdeveniments generadorEsdeveniments;
 
-    // NUEVO
     private Jugador guanyador;
 
     public Partida(int idPartida, Taulell taulell) {
@@ -47,7 +46,6 @@ public class Partida {
         return jugadors.get(indexJugadorActual);
     }
 
-    //  MÉTODO QUE TE FALTABA
     public Jugador getJugadorActual() {
         return obtenirJugadorActual();
     }
@@ -80,7 +78,6 @@ public class Partida {
         indexJugadorActual = (indexJugadorActual + 1) % jugadors.size();
     }
 
-    //  MÉTODO QUE TE FALTABA
     public void passarTorn() {
         seguentTorn();
     }
@@ -91,7 +88,17 @@ public class Partida {
 
     public void jugarTornTirarDau(Dau dau) {
 
+        // 🔥 1. Si ja hi ha guanyador → parar
+        if (hiHaGuanyador()) return;
+
         Jugador jugador = obtenirJugadorActual();
+
+        // 🔥 2. Control jugador congelat
+        if (!jugador.potJugar()) {
+            registrar(jugador.getNickname() + " està congelat ❄ i perd el torn");
+            seguentTorn();
+            return;
+        }
 
         int tirada = jugador.tirarDau(dau);
         int posAbans = jugador.getPosicioActual();
@@ -103,14 +110,14 @@ public class Partida {
         registrar(jugador.getNickname() + " ha tret " + tirada +
                 " i ha passat de " + posAbans + " a " + posDespres);
 
-        // 🔥 comprobar ganador
+        // 🔥 3. Comprovar guanyador
         if (jugador.esGuanyador(taulell.getNumCaselles())) {
             guanyador = jugador;
             registrar("🎉 " + jugador.getNickname() + " ha guanyat la partida!");
             return;
         }
 
-        // aplicar efecte casella
+        // 🔥 4. Aplicar efecte casella
         Casella casella = taulell.obtenirCasella(posDespres);
         casella.aplicarEfecte(jugador, this);
 
@@ -119,13 +126,22 @@ public class Partida {
 
     public boolean jugarTornBolaNeu(Jugador objectiu) {
 
+        if (hiHaGuanyador()) return false;
+
         Jugador atacant = obtenirJugadorActual();
+
+        // 🔥 control congelat
+        if (!atacant.potJugar()) {
+            registrar(atacant.getNickname() + " està congelat ❄ i no pot atacar");
+            seguentTorn();
+            return false;
+        }
 
         boolean ok = atacant.utilitzarBolaNeu(objectiu);
 
         if (ok) {
             registrar(atacant.getNickname() + " ha atacat " +
-                    objectiu.getNickname() + " amb bola de neu.");
+                    objectiu.getNickname() + " amb bola de neu ❄");
         } else {
             registrar(atacant.getNickname() + " no té boles de neu.");
         }
@@ -135,7 +151,7 @@ public class Partida {
     }
 
     // =========================
-    // 🔥 ESDEVENIMENTS
+    // ESDEVENIMENTS
     // =========================
 
     public Esdeveniment generarEsdevenimentAleatori() {
@@ -150,7 +166,7 @@ public class Partida {
     }
 
     // =========================
-    // 🔥 MÉTODOS QUE TE FALTABAN
+    // GUANYADOR
     // =========================
 
     public boolean hiHaGuanyador() {

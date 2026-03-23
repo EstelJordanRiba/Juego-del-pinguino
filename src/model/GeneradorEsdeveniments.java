@@ -3,53 +3,66 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-public class GeneradorEsdeveniments {
 
+public class GeneradorEsdeveniments {
 
     private final List<Esdeveniment> esdeveniments;
     private final Random random = new Random();
 
     public GeneradorEsdeveniments() {
+
         esdeveniments = new ArrayList<>();
 
-        // Pesos/probabilitats (exemple coherent amb el document: ràpid baixa, lent alta) :contentReference[oaicite:1]{index=1}
+        // 🎯 Probabilitats equilibrades
+
         esdeveniments.add(new Esdeveniment(
                 Esdeveniment.TipusEsdeveniment.OBTENIR_PEIX,
-                "Has encontrado un pescado ",
+                "🐟 Has trobat un peix",
                 0.25
         ));
 
         esdeveniments.add(new Esdeveniment(
                 Esdeveniment.TipusEsdeveniment.OBTENIR_BOLES_NEU,
-                "Adquieres bolas de nieve ",
+                "❄ Aconsegueixes boles de neu",
                 0.45
         ));
 
         esdeveniments.add(new Esdeveniment(
                 Esdeveniment.TipusEsdeveniment.OBTENIR_DAU_LENT,
-                "Conseguiste un dado muy lentoooo ",
+                "🐢 Has obtingut un dau lent",
                 0.25
         ));
 
         esdeveniments.add(new Esdeveniment(
                 Esdeveniment.TipusEsdeveniment.OBTENIR_DAU_RAPID,
-                "Conisguiste un rapido mas rapido que flash ",
+                "⚡ Has obtingut un dau ràpid",
                 0.05
         ));
     }
 
+    // 🎲 GENERADOR ALEATORI AMB PESOS
     public Esdeveniment generarAleatori() {
+
+        if (esdeveniments.isEmpty()) {
+            throw new IllegalStateException("No hi ha esdeveniments definits.");
+        }
+
         double total = 0.0;
-        for (Esdeveniment e : esdeveniments) total += e.getProbabilitat();
+        for (Esdeveniment e : esdeveniments) {
+            total += e.getProbabilitat();
+        }
 
         double r = random.nextDouble() * total;
         double acumulat = 0.0;
 
         for (Esdeveniment e : esdeveniments) {
             acumulat += e.getProbabilitat();
-            if (r <= acumulat) return e;
+            if (r <= acumulat) {
+                return e;
+            }
         }
 
+        // fallback (no hauria de passar)
         return esdeveniments.get(esdeveniments.size() - 1);
     }
 }

@@ -9,9 +9,11 @@ public class Casella_interrogatiu extends Casella {
     @Override
     public void aplicarEfecte(Jugador jugador, Partida partida) {
 
-        Esdeveniment esdeveniment = partida.getGeneradorEsdeveniments().generarAleatori();
-        esdeveniment.aplicar(jugador);
+        Esdeveniment esdeveniment = partida.generarEsdevenimentAleatori();
+        esdeveniment.aplicar(jugador, partida);
 
-        System.out.println("Casella sorpresa activada!");
+        partida.getHistorialAccions().add(
+                jugador.getNickname() + " activa una casella sorpresa ❓"
+        );
     }
 }

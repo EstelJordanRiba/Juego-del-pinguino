@@ -11,7 +11,7 @@ public class Esdeveniment {
 
     private TipusEsdeveniment tipus;
     private String descripcio;
-    private double probabilitat; // pes/prob (0..1)
+    private double probabilitat;
 
     public Esdeveniment(TipusEsdeveniment tipus, String descripcio, double probabilitat) {
         this.tipus = tipus;
@@ -31,28 +31,38 @@ public class Esdeveniment {
         return probabilitat;
     }
 
-    /**
-     * Aplica l'efecte al jugador (inventari controla els límits).
-     */
-    public void aplicar(Jugador jugador) {
+    // 🔥 MILLORAT (amb historial)
+    public void aplicar(Jugador jugador, Partida partida) {
+
         switch (tipus) {
 
             case OBTENIR_PEIX:
                 jugador.afegirPeix();
+                partida.getHistorialAccions().add(
+                        jugador.getNickname() + " obté un peix 🐟"
+                );
                 break;
 
             case OBTENIR_BOLES_NEU:
-                // 1 a 3 boles de neu
                 int q = 1 + (int) (Math.random() * 3);
                 jugador.afegirBolesNeu(q);
+                partida.getHistorialAccions().add(
+                        jugador.getNickname() + " obté " + q + " boles de neu ❄"
+                );
                 break;
 
             case OBTENIR_DAU_RAPID:
                 jugador.afegirDauRapid();
+                partida.getHistorialAccions().add(
+                        jugador.getNickname() + " obté un dau ràpid ⚡"
+                );
                 break;
 
             case OBTENIR_DAU_LENT:
                 jugador.afegirDauLent();
+                partida.getHistorialAccions().add(
+                        jugador.getNickname() + " obté un dau lent 🐢"
+                );
                 break;
         }
     }
