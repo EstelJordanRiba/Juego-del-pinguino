@@ -14,6 +14,9 @@ public class Partida {
 
     private GeneradorEsdeveniments generadorEsdeveniments;
 
+    // NUEVO
+    private Jugador guanyador;
+
     public Partida(int idPartida, Taulell taulell) {
         this.idPartida = idPartida;
         this.taulell = taulell;
@@ -21,6 +24,7 @@ public class Partida {
         this.indexJugadorActual = 0;
         this.historialAccions = new ArrayList<>();
         this.generadorEsdeveniments = new GeneradorEsdeveniments();
+        this.guanyador = null;
     }
 
     // =========================
@@ -43,11 +47,15 @@ public class Partida {
         return jugadors.get(indexJugadorActual);
     }
 
+    //  MÉTODO QUE TE FALTABA
+    public Jugador getJugadorActual() {
+        return obtenirJugadorActual();
+    }
+
     public List<String> getHistorialAccions() {
         return historialAccions;
     }
 
-    // 🔥 IMPORTANT PER LA UI
     public String obtenirUltimMissatgeHistorial() {
         if (historialAccions == null || historialAccions.isEmpty()) {
             return "Sense esdeveniments.";
@@ -72,6 +80,11 @@ public class Partida {
         indexJugadorActual = (indexJugadorActual + 1) % jugadors.size();
     }
 
+    //  MÉTODO QUE TE FALTABA
+    public void passarTorn() {
+        seguentTorn();
+    }
+
     // =========================
     // ACCIONS DE JOC
     // =========================
@@ -89,6 +102,13 @@ public class Partida {
 
         registrar(jugador.getNickname() + " ha tret " + tirada +
                 " i ha passat de " + posAbans + " a " + posDespres);
+
+        // 🔥 comprobar ganador
+        if (jugador.esGuanyador(taulell.getNumCaselles())) {
+            guanyador = jugador;
+            registrar("🎉 " + jugador.getNickname() + " ha guanyat la partida!");
+            return;
+        }
 
         // aplicar efecte casella
         Casella casella = taulell.obtenirCasella(posDespres);
@@ -130,6 +150,18 @@ public class Partida {
     }
 
     // =========================
+    // 🔥 MÉTODOS QUE TE FALTABAN
+    // =========================
+
+    public boolean hiHaGuanyador() {
+        return guanyador != null;
+    }
+
+    public Jugador getGuanyador() {
+        return guanyador;
+    }
+
+    // =========================
     // HISTORIAL
     // =========================
 
@@ -138,16 +170,14 @@ public class Partida {
     }
 
     // =========================
-    // GUARDAR / CARREGAR (BÀSIC)
+    // GUARDAR / CARREGAR
     // =========================
 
     public void guardarEstat() {
         registrar("Partida guardada.");
-        // aquí després pots connectar BD o fitxer
     }
 
     public void carregarPartida(int id) {
         registrar("Partida carregada.");
-        // aquí després pots implementar persistència real
     }
 }

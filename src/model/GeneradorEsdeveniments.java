@@ -3,13 +3,13 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-public class Generador_esdeveniments {
+public class GeneradorEsdeveniments {
 
 
     private final List<Esdeveniment> esdeveniments;
     private final Random random = new Random();
 
-    public Generador_esdeveniments() {
+    public GeneradorEsdeveniments() {
         esdeveniments = new ArrayList<>();
 
         // Pesos/probabilitats (exemple coherent amb el document: ràpid baixa, lent alta) :contentReference[oaicite:1]{index=1}

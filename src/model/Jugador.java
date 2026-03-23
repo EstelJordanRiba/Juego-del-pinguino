@@ -1,32 +1,25 @@
 package model;
+
 import java.util.Objects;
-/**
- * Classe que representa un jugador dins la partida del Joc d'en Pingu.
- * 
- * Gestiona:
- * - Posició al taulell
- * - Estat del jugador
- * - Inventari d'objectes
- * - Accions com moure's, retrocedir o utilitzar ítems
- */
 
 public class Jugador {
 
-    // ENUMS
+    // ENUM
     public enum EstatJugador {
         ACTIU,
         ELIMINAT,
         CONGELAT
     }
-    // ATRIBUTS
 
+    // ATRIBUTOS
     private int idJugador;
     private String nickname;
     private int posicioActual;
     private int ordreTorn;
     private EstatJugador estat;
     private Inventari inventari;
-    // CONSTRUCTORS
+
+    // CONSTRUCTORES
     public Jugador(int idJugador, String nickname, int ordreTorn) {
         this.idJugador = idJugador;
         this.nickname = nickname;
@@ -35,34 +28,43 @@ public class Jugador {
         this.estat = EstatJugador.ACTIU;
         this.inventari = new Inventari();
     }
-    public Jugador() {
-        this.inventari = new Inventari();
-        this.estat = EstatJugador.ACTIU;
-    }
-    // GETTERS & SETTERS
-   
 
+    public Jugador() {
+        this.posicioActual = 0;
+        this.estat = EstatJugador.ACTIU;
+        this.inventari = new Inventari();
+    }
+
+    // GETTERS
     public int getIdJugador() {
         return idJugador;
     }
+
     public String getNickname() {
         return nickname;
     }
+
     public int getPosicioActual() {
         return posicioActual;
     }
+
     public int getOrdreTorn() {
         return ordreTorn;
     }
+
     public EstatJugador getEstat() {
         return estat;
     }
+
     public Inventari getInventari() {
         return inventari;
     }
+
+    // SETTERS
     public void setEstat(EstatJugador estat) {
         this.estat = estat;
     }
+
     public void setPosicioActual(int posicioActual, int numCasellesTaulell) {
         if (posicioActual < 0) {
             this.posicioActual = 0;
@@ -72,20 +74,17 @@ public class Jugador {
             this.posicioActual = posicioActual;
         }
     }
-    // LÒGICA DEL JOC
-    /**
-     * Tirar un dau segons el tipus.     */
+
+    // LÓGICA
+
     public int tirarDau(Dau dau) {
         return dau.tirar();
     }
-    /**
-     * Mou el jugador cap endavant.     */
+
     public void moure(int passos, int numCasellesTaulell) {
         setPosicioActual(this.posicioActual + passos, numCasellesTaulell);
     }
 
-    /**
-     * Retrocedeix el jugador.  */
     public void retrocedir(int passos) {
         this.posicioActual -= passos;
         if (this.posicioActual < 0) {
@@ -93,20 +92,14 @@ public class Jugador {
         }
     }
 
-    /**
-     * L’Ós ataca → tornar a inici.     */
     public void tornarInici() {
         this.posicioActual = 0;
     }
 
-    /**
-     * Comprova si és guanyador.   */
     public boolean esGuanyador(int ultimaCasella) {
         return this.posicioActual >= ultimaCasella;
     }
 
-    /**
-     * Utilitzar bola de neu contra un altre jugador.     */
     public boolean utilitzarBolaNeu(Jugador objectiu) {
         if (inventari.gastarBolaNeu()) {
             objectiu.retrocedir(3);
@@ -115,27 +108,28 @@ public class Jugador {
         return false;
     }
 
-    /**
-     * Intentar subornar l'Ós amb un peix.     */
     public boolean utilitzarPeix() {
         return inventari.gastarPeix();
     }
 
-    /**
-     * Afegir ítems a l’inventari.  */
     public void afegirPeix() {
         inventari.afegirPeix();
     }
+
     public void afegirBolesNeu(int quantitat) {
         inventari.afegirBolesNeu(quantitat);
     }
+
     public void afegirDauRapid() {
         inventari.afegirDauRapid();
     }
+
     public void afegirDauLent() {
         inventari.afegirDauLent();
     }
-    // OBJECT METHODS
+
+    // OBJECT
+
     @Override
     public String toString() {
         return "Jugador{" +
@@ -153,6 +147,7 @@ public class Jugador {
         Jugador jugador = (Jugador) o;
         return idJugador == jugador.idJugador;
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(idJugador);

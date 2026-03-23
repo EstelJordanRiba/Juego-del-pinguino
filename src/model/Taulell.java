@@ -22,7 +22,7 @@ public class Taulell {
             throw new IllegalArgumentException("El taulell ha de tenir 50 caselles o més.");
         }
         this.numCaselles = numCaselles;
-        this.caselles = new ArrayList<>(numCaselles + 1);
+        this.caselles = new ArrayList<>();
         generarTaulellAleatori();
     }
 
@@ -45,7 +45,7 @@ public class Taulell {
     public final void generarTaulellAleatori() {
         caselles.clear();
 
-        // Inicialitzar posicions
+        // 🔥 IMPORTANT → inicialitzar correctament
         for (int pos = 0; pos <= numCaselles; pos++) {
             caselles.add(null);
         }
@@ -54,7 +54,6 @@ public class Taulell {
         caselles.set(0, CasellaFactory.crearNormal(0, 0));
         caselles.set(numCaselles, CasellaFactory.crearNormal(numCaselles, numCaselles));
 
-        // Generació aleatòria
         for (int pos = 1; pos < numCaselles; pos++) {
 
             boolean zonaInicial = pos < 5;
@@ -73,10 +72,17 @@ public class Taulell {
     public Casella obtenirCasella(int posicio) {
         if (posicio < 0) posicio = 0;
         if (posicio > numCaselles) posicio = numCaselles;
-        return caselles.get(posicio);
+
+        // 🔥 SEGUR → evitar null
+        Casella c = caselles.get(posicio);
+        if (c == null) {
+            return CasellaFactory.crearNormal(posicio, posicio);
+        }
+
+        return c;
     }
 
-    // 🔥 IMPORTANT (evita errors amb altres classes)
+    // 🔥 alias per compatibilitat amb altres classes
     public Casella getCasella(int posicio) {
         return obtenirCasella(posicio);
     }
@@ -113,7 +119,6 @@ public class Taulell {
 
             Casella actual = caselles.get(pos);
 
-            // Evitem sobrescriure caselles "dures"
             if (!(actual instanceof Casella_Ós) &&
                 !(actual instanceof Casella_forat)) {
 
@@ -132,7 +137,7 @@ public class Taulell {
     }
 
     // =========================
-    // FACTORY (PUNT NOTA ALTA)
+    // FACTORY
     // =========================
 
     public static class CasellaFactory {
