@@ -1,4 +1,4 @@
- package Pingu;
+package Pingu;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -77,7 +77,8 @@ public class BBDD {
             return resultados;
         }
 
-        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+        try (Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
 
             ResultSetMetaData meta = rs.getMetaData();
             int numColumnas = meta.getColumnCount();
@@ -102,6 +103,7 @@ public class BBDD {
     }
 
     public static void print(Connection con, String sql, String[] listaElementosSeleccionados) {
+
         if (con == null) {
             System.out.println("No hay conexión. Llama antes a conectarBaseDatos().");
             return;
@@ -115,7 +117,9 @@ public class BBDD {
             while (rs.next()) {
                 hayResultados = true;
                 fila++;
+
                 System.out.println("---- Fila " + fila + " ----");
+
                 for (String col : listaElementosSeleccionados) {
                     System.out.println(col + ": " + rs.getString(col));
                 }
@@ -131,15 +135,20 @@ public class BBDD {
     }
 
     public static int executeInsUpDel(Connection con, String sql, String etiqueta) {
+
         if (con == null) {
             System.out.println("No hay conexión. Llama antes a conectarBaseDatos().");
             return 0;
         }
 
         try (Statement st = con.createStatement()) {
+
             int filas = st.executeUpdate(sql);
+
             System.out.println(etiqueta + " hecho correctamente. Filas afectadas: " + filas);
+
             return filas;
+
         } catch (SQLException e) {
             System.out.println("Ha habido un error en " + etiqueta + ": " + e.getMessage());
             return 0;
