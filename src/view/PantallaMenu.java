@@ -1,12 +1,10 @@
-package vista;
+package view;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import model.Jugador;
-import model.Partida;
-import model.Taulell;
+import model.*;
 
 public class PantallaMenu {
 
@@ -27,17 +25,23 @@ public class PantallaMenu {
     }
 
     private void iniciarDemo() {
-        String user = userField.getText() == null || userField.getText().isBlank()
+
+        // 🔥 Nom jugador amb validació
+        String user = (userField.getText() == null || userField.getText().isBlank())
                 ? "Jugador1"
                 : userField.getText().trim();
 
+        // 🔥 Crear partida
         Taulell taulell = new Taulell(50);
         Partida partida = new Partida(1, taulell);
 
+        // 🔥 Jugadors (1 usuari + 1 IA)
         partida.afegirJugador(new Jugador(1, user, 1));
-        partida.afegirJugador(new Jugador(2, "Jugador2", 2));
+        partida.afegirJugador(new FocaIA(2, "Foca IA", 2));
+
         partida.iniciarPartida();
 
+        // 🔥 Canvi d’escena
         SceneManager.mostrarJoc(partida);
     }
 }

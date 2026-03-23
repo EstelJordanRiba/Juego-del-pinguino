@@ -1,11 +1,10 @@
-package vista;
+package view;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
@@ -13,13 +12,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import model.Dau;
-import model.Jugador;
-import model.Partida;
-import model.Taulell;
-import model.Casella;
+import model.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,27 +72,20 @@ public class PantallaJuego {
         casellesUI.clear();
 
         Taulell taulell = partida.getTaulell();
-        int total = taulell.getNumCaselles(); // 50
-        int files = 10;
+        int total = taulell.getNumCaselles();
         int columnes = 5;
 
         for (int pos = 0; pos <= total; pos++) {
             int fila = pos / columnes;
             int colBase = pos % columnes;
 
-            int col;
-            if (fila % 2 == 0) {
-                col = colBase;
-            } else {
-                col = columnes - 1 - colBase;
-            }
+            int col = (fila % 2 == 0) ? colBase : columnes - 1 - colBase;
 
             StackPane cell = crearCasellaUI(pos, taulell.obtenirCasella(pos));
             tablero.add(cell, col, fila);
             casellesUI.put(pos, cell);
         }
 
-        // Torna a afegir les fitxes per sobre
         for (Circle fitxa : fitxes.values()) {
             if (fitxa != null) {
                 tablero.getChildren().add(fitxa);
@@ -109,8 +96,6 @@ public class PantallaJuego {
     private StackPane crearCasellaUI(int posicio, Casella casella) {
         StackPane cell = new StackPane();
         cell.setMinSize(110, 48);
-        cell.setPrefSize(110, 48);
-        cell.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
         String color = obtenirColorCasella(casella, posicio);
         cell.setStyle("""
@@ -125,10 +110,7 @@ public class PantallaJuego {
         contingut.setAlignment(Pos.CENTER);
 
         Text numero = new Text(String.valueOf(posicio));
-        numero.getStyleClass().add("cell-title");
-
         Text tipus = new Text(obtenirTextCasella(casella, posicio));
-        tipus.getStyleClass().add("cell-type");
 
         contingut.getChildren().addAll(numero, tipus);
         cell.getChildren().add(contingut);
@@ -166,138 +148,92 @@ public class PantallaJuego {
         return "#f8fafc";
     }
 
+    // =========================
+    // BOTONS
+    // =========================
+
     @FXML
     private void handleDado(ActionEvent event) {
-        if (partida == null) return;
+        if (partida == null || partida.hiHaGuanyador()) return;
 
         Dau dauNormal = Dau.crearDau(Dau.TipusDau.NORMAL);
-        Jugador jugadorAbans = partida.obtenirJugadorActual();
-        int posAbans = jugadorAbans.getPosicioActual();
+        int tirada = dauNormal.tirar();
 
         partida.jugarTornTirarDau(dauNormal);
 
-        int posDespres = jugadorAbans.getPosicioActual();
-        int tirada = posDespres - posAbans;
-        dadoResultText.setText("Ha salido: " + Math.max(tirada, 0));
+        dadoResultText.setText("Ha salido: " + tirada);
 
-        mostrarUltimEvent();
         actualitzarTot();
     }
 
     @FXML
     private void handleRapido(ActionEvent event) {
-        if (partida == null) return;
+        if (partida == null || partida.hiHaGuanyador()) return;
 
         Jugador jugador = partida.obtenirJugadorActual();
+
         if (!jugador.getInventari().gastarDauRapid()) {
-            eventos.setText("Aquest jugador no té daus ràpids.");
-            actualitzarTot();
+            eventos.setText("No té daus ràpids.");
             return;
         }
 
-        int posAbans = jugador.getPosicioActual();
-        Dau dauRapid = Dau.crearDau(Dau.TipusDau.RAPID);
-        partida.jugarTornTirarDau(dauRapid);
+        Dau dau = Dau.crearDau(Dau.TipusDau.RAPID);
+        int tirada = dau.tirar();
 
-        int posDespres = jugador.getPosicioActual();
-        dadoResultText.setText("Ha salido: " + Math.max(posDespres - posAbans, 0));
+        partida.jugarTornTirarDau(dau);
 
-        mostrarUltimEvent();
+        dadoResultText.setText("Ha salido: " + tirada);
+
         actualitzarTot();
     }
 
     @FXML
     private void handleLento(ActionEvent event) {
-        if (partida == null) return;
+        if (partida == null || partida.hiHaGuanyador()) return;
 
         Jugador jugador = partida.obtenirJugadorActual();
+
         if (!jugador.getInventari().gastarDauLent()) {
-            eventos.setText("Aquest jugador no té daus lents.");
-            actualitzarTot();
+            eventos.setText("No té daus lents.");
             return;
         }
 
-        int posAbans = jugador.getPosicioActual();
-        Dau dauLent = Dau.crearDau(Dau.TipusDau.LENT);
-        partida.jugarTornTirarDau(dauLent);
+        Dau dau = Dau.crearDau(Dau.TipusDau.LENT);
+        int tirada = dau.tirar();
 
-        int posDespres = jugador.getPosicioActual();
-        dadoResultText.setText("Ha salido: " + Math.max(posDespres - posAbans, 0));
+        partida.jugarTornTirarDau(dau);
 
-        mostrarUltimEvent();
-        actualitzarTot();
-    }
-
-    @FXML
-    private void handlePeces(ActionEvent event) {
-        if (partida == null) return;
-
-        Jugador jugador = partida.obtenirJugadorActual();
-        boolean usat = jugador.utilitzarPeix();
-
-        if (usat) {
-            eventos.setText(jugador.getNickname() + " ha utilitzat un peix.");
-        } else {
-            eventos.setText(jugador.getNickname() + " no té peixos.");
-        }
+        dadoResultText.setText("Ha salido: " + tirada);
 
         actualitzarTot();
     }
 
     @FXML
     private void handleNieve(ActionEvent event) {
-        if (partida == null) return;
+        if (partida == null || partida.hiHaGuanyador()) return;
 
         Jugador atacant = partida.obtenirJugadorActual();
         Jugador objectiu = buscarPrimerRivalDisponible(atacant);
 
         if (objectiu == null) {
-            eventos.setText("No hi ha cap rival disponible.");
+            eventos.setText("No hi ha rival.");
             return;
         }
 
-        boolean ok = partida.jugarTornBolaNeu(objectiu);
-
-        if (ok) {
-            eventos.setText(atacant.getNickname() + " ataca " + objectiu.getNickname() + " amb una bola de neu.");
-        } else {
-            eventos.setText(atacant.getNickname() + " no té boles de neu.");
-        }
+        partida.jugarTornBolaNeu(objectiu);
 
         actualitzarTot();
     }
+
+    // =========================
+    // LOGICA
+    // =========================
 
     private Jugador buscarPrimerRivalDisponible(Jugador atacant) {
         for (Jugador j : partida.getJugadors()) {
-            if (!j.equals(atacant)) {
-                return j;
-            }
+            if (!j.equals(atacant)) return j;
         }
         return null;
-    }
-
-    @FXML
-    private void handleNewGame(ActionEvent event) {
-        SceneManager.mostrarMenu();
-    }
-
-    @FXML
-    private void handleSaveGame(ActionEvent event) {
-        partida.guardarEstat();
-        mostrarUltimEvent();
-        actualitzarTot();
-    }
-
-    @FXML
-    private void handleLoadGame(ActionEvent event) {
-        partida.carregarPartida(partida.getIdPartida());
-        mostrarUltimEvent();
-        actualitzarTot();
-    }
-
-    @FXML
-    private void handleQuitGame(ActionEvent event) {
-        Platform.exit();
     }
 
     private void actualitzarTot() {
@@ -306,23 +242,21 @@ public class PantallaJuego {
         actualitzarInventari();
         actualitzarFitxes();
         destacarJugadorActual();
+        mostrarUltimEvent();
         comprovarGuanyador();
     }
 
     private void actualitzarInventari() {
         Jugador actual = partida.obtenirJugadorActual();
-        if (actual == null) return;
 
-        rapido_t.setText("Dado rápido: " + actual.getInventari().getDausRapids());
-        lento_t.setText("Dado lento: " + actual.getInventari().getDausLents());
-        peces_t.setText("Peces: " + actual.getInventari().getPeixos());
-        nieve_t.setText("Bolas de nieve: " + actual.getInventari().getBolesNeu());
+        rapido_t.setText("Ràpid: " + actual.getInventari().getDausRapids());
+        lento_t.setText("Lent: " + actual.getInventari().getDausLents());
+        peces_t.setText("Peixos: " + actual.getInventari().getPeixos());
+        nieve_t.setText("Neu: " + actual.getInventari().getBolesNeu());
     }
 
     private void actualitzarFitxes() {
-        // Treure posicions antigues
         for (Circle fitxa : fitxes.values()) {
-            if (fitxa == null) continue;
             GridPane.setColumnIndex(fitxa, null);
             GridPane.setRowIndex(fitxa, null);
         }
@@ -330,10 +264,10 @@ public class PantallaJuego {
         Map<Integer, Integer> ocupacio = new HashMap<>();
 
         for (Jugador jugador : partida.getJugadors()) {
-            Circle fitxa = fitxes.get(jugador.getIdJugador());
-            if (fitxa == null) continue;
 
+            Circle fitxa = fitxes.get(jugador.getIdJugador());
             int pos = jugador.getPosicioActual();
+
             int fila = pos / 5;
             int colBase = pos % 5;
             int col = (fila % 2 == 0) ? colBase : 4 - colBase;
@@ -343,53 +277,36 @@ public class PantallaJuego {
 
             GridPane.setColumnIndex(fitxa, col);
             GridPane.setRowIndex(fitxa, fila);
-            GridPane.setHalignment(fitxa, HPos.LEFT);
 
-            switch (offset) {
-                case 0 -> fitxa.setTranslateX(8);
-                case 1 -> fitxa.setTranslateX(36);
-                case 2 -> fitxa.setTranslateX(64);
-                case 3 -> fitxa.setTranslateX(92);
-                default -> fitxa.setTranslateX(8);
-            }
-            fitxa.setTranslateY(0);
+            fitxa.setTranslateX(8 + offset * 28);
         }
     }
 
     private void destacarJugadorActual() {
-        for (Circle fitxa : fitxes.values()) {
-            if (fitxa != null) {
-                fitxa.getStyleClass().remove("current-player");
-            }
+
+        for (StackPane cell : casellesUI.values()) {
+            cell.setStyle(cell.getStyle().replace("-fx-border-color: red;", ""));
         }
 
-        Jugador actual = partida.obtenirJugadorActual();
-        if (actual == null) return;
+        int pos = partida.obtenirJugadorActual().getPosicioActual();
+        StackPane cell = casellesUI.get(pos);
 
-        Circle fitxaActual = fitxes.get(actual.getIdJugador());
-        if (fitxaActual != null && !fitxaActual.getStyleClass().contains("current-player")) {
-            fitxaActual.getStyleClass().add("current-player");
+        if (cell != null) {
+            cell.setStyle(cell.getStyle() + "-fx-border-color: red; -fx-border-width: 2;");
         }
     }
 
     private void mostrarUltimEvent() {
         List<String> historial = partida.getHistorialAccions();
-        if (historial == null || historial.isEmpty()) {
-            eventos.setText("Sense esdeveniments.");
-            return;
+        if (!historial.isEmpty()) {
+            eventos.setText(historial.get(historial.size() - 1));
         }
-
-        String ultim = historial.get(historial.size() - 1);
-        eventos.setText(ultim);
     }
 
     private void comprovarGuanyador() {
-        for (Jugador j : partida.getJugadors()) {
-            if (j.esGuanyador(partida.getTaulell().getNumCaselles())) {
-                eventos.setText("🏆 Guanyador: " + j.getNickname());
-                desactivarAccions();
-                break;
-            }
+        if (partida.hiHaGuanyador()) {
+            eventos.setText("🏆 " + partida.getGuanyador().getNickname());
+            desactivarAccions();
         }
     }
 
@@ -399,5 +316,10 @@ public class PantallaJuego {
         lento.setDisable(true);
         peces.setDisable(true);
         nieve.setDisable(true);
+    }
+
+    @FXML
+    private void handleQuitGame(ActionEvent event) {
+        Platform.exit();
     }
 }

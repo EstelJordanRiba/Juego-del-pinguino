@@ -1,4 +1,4 @@
-package vista;
+package view;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,8 +14,7 @@ public class SceneManager {
     private static final double WIDTH = 1100;
     private static final double HEIGHT = 760;
 
-    private SceneManager() {
-    }
+    private SceneManager() {}
 
     public static void init(Stage primaryStage) {
         stage = primaryStage;
@@ -30,10 +29,17 @@ public class SceneManager {
             );
             Parent root = loader.load();
 
-            Scene scene = new Scene(root, 700, 500);
+            Scene scene = new Scene(root, WIDTH, HEIGHT);
+
+            scene.getStylesheets().add(
+                    SceneManager.class.getResource("/PantallaJuego.css").toExternalForm()
+            );
+
             stage.setScene(scene);
             stage.show();
+
         } catch (IOException e) {
+            System.err.println("Error carregant menú");
             e.printStackTrace();
         }
     }
@@ -49,9 +55,16 @@ public class SceneManager {
             controller.setPartida(partida);
 
             Scene scene = new Scene(root, WIDTH, HEIGHT);
+
+            scene.getStylesheets().add(
+                    SceneManager.class.getResource("/PantallaJuego.css").toExternalForm()
+            );
+
             stage.setScene(scene);
             stage.show();
+
         } catch (IOException e) {
+            System.err.println("Error carregant joc");
             e.printStackTrace();
         }
     }

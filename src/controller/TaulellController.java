@@ -1,9 +1,6 @@
 package controller;
 
-import model.Taulell;
-import model.Jugador;
-import model.Casella;
-import model.Partida;
+import model.*;
 
 public class TaulellController {
 
@@ -13,20 +10,23 @@ public class TaulellController {
         this.taulell = taulell;
     }
 
-    /**
-     * Obté la casella on està el jugador.
-     */
+    // =========================
+    // CONSULTA
+    // =========================
+
     public Casella obtenirCasellaJugador(Jugador jugador) {
         return taulell.obtenirCasella(jugador.getPosicioActual());
     }
 
-    /**
-     * Aplica l’efecte de la casella.
-     */
-    public void aplicarEfecteCasella(Jugador jugador, Partida partida) {
+    // =========================
+    // INFO PER UI (OPCIONAL)
+    // =========================
 
-        Casella casella = taulell.obtenirCasella(jugador.getPosicioActual());
+    public int getPosicioJugador(Jugador jugador) {
+        return jugador.getPosicioActual();
+    }
 
-        casella.aplicarEfecte(jugador, partida);
+    public int getTotalCaselles() {
+        return taulell.getNumCaselles();
     }
 }
