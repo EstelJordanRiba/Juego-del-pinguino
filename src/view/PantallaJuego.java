@@ -1,6 +1,7 @@
 package vista;
 
 import javafx.application.Platform;
+import javafx.scene.input.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -401,3 +402,4 @@ public class PantallaJuego {
         nieve.setDisable(true);
     }
 }
+
