@@ -32,7 +32,7 @@ public class SceneManager {
             Scene scene = new Scene(root, WIDTH, HEIGHT);
 
             scene.getStylesheets().add(
-                    SceneManager.class.getResource("/PantallaJuego.css").toExternalForm()
+                    SceneManager.class.getResource("/PantallaMenu.css").toExternalForm()
             );
 
             stage.setScene(scene);
