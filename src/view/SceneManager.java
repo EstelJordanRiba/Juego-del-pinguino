@@ -11,10 +11,9 @@ import javafx.stage.Stage;
 public class SceneManager {
 
     private static Stage stage;
-    private static final double WIDTH = 1100;
-    private static final double HEIGHT = 760;
 
-    private SceneManager() {}
+    private SceneManager() {
+    }
 
     public static void init(Stage primaryStage) {
         stage = primaryStage;
@@ -24,45 +23,34 @@ public class SceneManager {
 
     public static void mostrarMenu() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    SceneManager.class.getResource("/PantallaMenu.fxml")
-            );
+            FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource("/PantallaMenu.fxml"));
             Parent root = loader.load();
 
-            Scene scene = new Scene(root, WIDTH, HEIGHT);
-
+            Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
 
         } catch (IOException e) {
-            System.err.println("Error carregant el menú");
+            System.err.println("Error carregant PantallaMenu.fxml");
             e.printStackTrace();
         }
     }
 
-    public static void mostrarJoc(GestorPartida gestorPartida) {
+    public static void mostrarJuego(GestorPartida gestorPartida) {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    SceneManager.class.getResource("/PantallaJuego.fxml")
-            );
+            FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource("/PantallaJuego.fxml"));
             Parent root = loader.load();
 
             PantallaJuego controller = loader.getController();
             controller.setGestorPartida(gestorPartida);
-            controller.prepararPartidaDemo();
 
-            Scene scene = new Scene(root, WIDTH, HEIGHT);
-
+            Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
 
         } catch (IOException e) {
-            System.err.println("Error carregant la pantalla de joc");
+            System.err.println("Error carregant PantallaJuego.fxml");
             e.printStackTrace();
         }
-    }
-
-    public static Stage getStage() {
-        return stage;
     }
 }
