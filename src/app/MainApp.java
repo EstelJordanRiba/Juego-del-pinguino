@@ -2,7 +2,7 @@ package app;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import vista.SceneManager;
+import view.SceneManager;
 
 public class MainApp extends Application {
 
