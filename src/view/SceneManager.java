@@ -1,12 +1,12 @@
 package view;
 
+import java.io.IOException;
+
+import controlador.GestorPartida;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import model.Partida;
-
-import java.io.IOException;
 
 public class SceneManager {
 
@@ -31,20 +31,16 @@ public class SceneManager {
 
             Scene scene = new Scene(root, WIDTH, HEIGHT);
 
-            scene.getStylesheets().add(
-                    SceneManager.class.getResource("/PantallaMenu.css").toExternalForm()
-            );
-
             stage.setScene(scene);
             stage.show();
 
         } catch (IOException e) {
-            System.err.println("Error carregant menú");
+            System.err.println("Error carregant el menú");
             e.printStackTrace();
         }
     }
 
-    public static void mostrarJoc(Partida partida) {
+    public static void mostrarJoc(GestorPartida gestorPartida) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     SceneManager.class.getResource("/PantallaJuego.fxml")
@@ -52,19 +48,16 @@ public class SceneManager {
             Parent root = loader.load();
 
             PantallaJuego controller = loader.getController();
-            controller.setPartida(partida);
+            controller.setGestorPartida(gestorPartida);
+            controller.prepararPartidaDemo();
 
             Scene scene = new Scene(root, WIDTH, HEIGHT);
-
-            scene.getStylesheets().add(
-                    SceneManager.class.getResource("/PantallaJuego.css").toExternalForm()
-            );
 
             stage.setScene(scene);
             stage.show();
 
         } catch (IOException e) {
-            System.err.println("Error carregant joc");
+            System.err.println("Error carregant la pantalla de joc");
             e.printStackTrace();
         }
     }
