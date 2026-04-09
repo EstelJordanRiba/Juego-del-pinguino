@@ -19,16 +19,12 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-<<<<<<< HEAD
-<BorderPane
-    xmlns="http://javafx.com/javafx/21.0.10"
-    xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="view.PantallaJuego"
-    stylesheets="@PantallaJuego.css"
-    styleClass="root">
-=======
-<BorderPane prefWidth="923.0" styleClass="root" stylesheets="@PantallaJuego.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Pan">
->>>>>>> ebe6acf0639c8686d682a2903ad5c555e8c20ca4
+<BorderPane xmlns="http://javafx.com" 
+            xmlns:fx="http://javafx.com" 
+            fx:controller="view.PantallaJuego" 
+            stylesheets="@PantallaJuego.css" 
+            styleClass="root" 
+            prefWidth="923.0">
 
     <top>
         <MenuBar>
@@ -80,7 +76,7 @@
                     <Text styleClass="cell-title" text="Start" />
                     <Text styleClass="cell-title" text="Finish" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="9" />
 
-                    <!-- Jugadores: fx:id para Controller + id para CSS -->
+                    <!-- Jugadores -->
                     <Circle id="P1" fx:id="P1" radius="14.0" styleClass="player" />
                     <Circle id="P2" fx:id="P2" radius="14.0" styleClass="player">
                         <GridPane.margin><Insets left="34.0" /></GridPane.margin>
@@ -112,7 +108,6 @@
             <!-- Tarjeta Objetos -->
             <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
                 <Label styleClass="card-title" text="Objetos" />
-
                 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="objects-scroll" vbarPolicy="AS_NEEDED">
                     <content>
                         <VBox spacing="10">
@@ -143,7 +138,6 @@
                                 <Region HBox.hgrow="ALWAYS" />
                                 <Button fx:id="nieve" onAction="#handleNieve" text="Usar" />
                             </HBox>
-
                         </VBox>
                     </content>
                 </ScrollPane>
@@ -154,7 +148,6 @@
                 <Label styleClass="card-title" text="Eventos" />
                 <Text fx:id="eventos" styleClass="events" text="Evento ocurrido" wrappingWidth="280" />
             </VBox>
-
         </HBox>
     </bottom>
 

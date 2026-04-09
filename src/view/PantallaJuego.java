@@ -54,6 +54,29 @@ public class PantallaJuego {
         this.partida = partida;
         inicialitzarVista();
     }
+    @FXML
+    private void handleNewGame(ActionEvent event) {
+        System.out.println("Nueva partida");
+        eventos.setText("Nova partida iniciada");
+    }
+
+    @FXML
+    private void handleSaveGame(ActionEvent event) {
+        System.out.println("Guardar partida");
+        eventos.setText("Partida guardada");
+    }
+
+    @FXML
+    private void handleLoadGame(ActionEvent event) {
+        System.out.println("Cargar partida");
+        eventos.setText("Partida carregada");
+    }
+
+    @FXML
+    private void handlePeces(ActionEvent event) {
+        System.out.println("Usar peces");
+        eventos.setText("Funció de peixos no implementada encara");
+    }
 
     @FXML
     public void initialize() {
