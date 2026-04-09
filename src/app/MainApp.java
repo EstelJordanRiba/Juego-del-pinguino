@@ -9,7 +9,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            SceneManager.init(primaryStage);
+        	SceneManager.init(primaryStage);
             SceneManager.mostrarMenu();
         } catch (Exception e) {
             System.err.println("Error iniciant l'aplicació");

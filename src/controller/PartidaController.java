@@ -53,6 +53,10 @@ public class PartidaController {
     // GETTERS PER UI
     // =========================
 
+    public Partida getPartida() {
+        return partida;
+    }
+
     public Jugador getJugadorActual() {
         return partida.getJugadorActual();
     }

@@ -2,7 +2,7 @@ package view;
 
 import java.io.IOException;
 
-import controlador.GestorPartida;
+import controller.PartidaController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,7 +16,9 @@ public class SceneManager {
     }
 
     public static void init(Stage primaryStage) {
-        stage = primaryStage;
+
+    	
+    	stage = primaryStage;
         stage.setTitle("El Joc del Pingüí");
         stage.setResizable(true);
     }
@@ -36,13 +38,13 @@ public class SceneManager {
         }
     }
 
-    public static void mostrarJuego(GestorPartida gestorPartida) {
+    public static void mostrarJuego(PartidaController gestorPartida) {
         try {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource("/PantallaJuego.fxml"));
             Parent root = loader.load();
 
             PantallaJuego controller = loader.getController();
-            controller.setGestorPartida(gestorPartida);
+            controller.setPartida(gestorPartida.getPartida());
 
             Scene scene = new Scene(root);
             stage.setScene(scene);

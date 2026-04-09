@@ -1,4 +1,4 @@
-package vista;
+package view;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -27,36 +27,30 @@ public class PantallaMenu {
 
     @FXML
     private void initialize() {
-        // This method is called automatically after the FXML is loaded
-        // You can set initial values or add listeners here
-        System.out.println("pantallaPrincipalController initialized");
+        System.out.println("PantallaMenu inicializada");
     }
 
     @FXML
     private void handleNewGame() {
         System.out.println("New Game clicked");
-        // TODO
     }
 
     @FXML
     private void handleSaveGame() {
         System.out.println("Save Game clicked");
-        // TODO
     }
 
     @FXML
     private void handleLoadGame() {
         System.out.println("Load Game clicked");
-        // TODO
     }
 
     @FXML
     private void handleQuitGame() {
         System.out.println("Quit Game clicked");
-        // TODO
         System.exit(0);
     }
-    
+
     @FXML
     private void handleLogin(ActionEvent event) {
         String username = userField.getText();
@@ -64,29 +58,29 @@ public class PantallaMenu {
 
         System.out.println("Login pressed: " + username + " / " + password);
 
-        // Basic check (just for demo, replace with real login logic)
         if (!username.isEmpty() && !password.isEmpty()) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/PantallaJuego.fxml"));
-                Parent pantallaJuegoRoot = loader.load();
-                Scene pantallaJuegoScene = new Scene(pantallaJuegoRoot);
+                Parent root = loader.load();
 
-                // Get the current stage using the event
+                Scene scene = new Scene(root);
+
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                stage.setScene(pantallaJuegoScene);
+                stage.setScene(scene);
                 stage.setTitle("Pantalla de Juego");
+                stage.show();
+
             } catch (Exception e) {
+                System.out.println("Error cargando PantallaJuego.fxml");
                 e.printStackTrace();
             }
         } else {
-            System.out.println("Please. Enter user and password.");
+            System.out.println("Por favor, introduce usuario y contraseña");
         }
     }
-
 
     @FXML
     private void handleRegister() {
         System.out.println("Register pressed");
-        // TODO
     }
 }

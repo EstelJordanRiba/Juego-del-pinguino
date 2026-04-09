@@ -318,14 +318,11 @@ public class PantallaJuego {
         peces.setDisable(true);
         nieve.setDisable(true);
     }
-<<<<<<< HEAD
+
 
     @FXML
     private void handleQuitGame(ActionEvent event) {
         Platform.exit();
     }
 }
-=======
-}
 
->>>>>>> ebe6acf0639c8686d682a2903ad5c555e8c20ca4
