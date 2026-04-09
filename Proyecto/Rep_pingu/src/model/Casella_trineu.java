@@ -1,0 +1,21 @@
+package model;
+
+public class Casella_trineu extends Casella {
+
+    public Casella_trineu(int idCasella, int posicio) {
+        super(idCasella, posicio);
+    }
+
+    @Override
+    public void aplicarEfecte(Jugador jugador, Partida partida) {
+
+        int novaPosicio = partida.getTaulell()
+                .buscarSeguentTrineu(jugador.getPosicioActual());
+
+        jugador.setPosicioActual(novaPosicio, partida.getTaulell().getNumCaselles());
+
+        partida.getHistorialAccions().add(
+                jugador.getNickname() + " usa un trineu 🛷 i avança fins a " + novaPosicio
+        );
+    }
+}

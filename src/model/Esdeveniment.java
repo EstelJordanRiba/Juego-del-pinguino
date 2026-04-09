@@ -31,7 +31,6 @@ public class Esdeveniment {
         return probabilitat;
     }
 
-    // 🔥 MILLORAT (amb historial)
     public void aplicar(Jugador jugador, Partida partida) {
 
         switch (tipus) {
@@ -39,7 +38,7 @@ public class Esdeveniment {
             case OBTENIR_PEIX:
                 jugador.afegirPeix();
                 partida.getHistorialAccions().add(
-                        jugador.getNickname() + " obté un peix 🐟"
+                        jugador.getNickname() + " obté un peix "
                 );
                 break;
 
@@ -47,21 +46,21 @@ public class Esdeveniment {
                 int q = 1 + (int) (Math.random() * 3);
                 jugador.afegirBolesNeu(q);
                 partida.getHistorialAccions().add(
-                        jugador.getNickname() + " obté " + q + " boles de neu ❄"
+                        jugador.getNickname() + " obté " + q + " boles de neu "
                 );
                 break;
 
             case OBTENIR_DAU_RAPID:
                 jugador.afegirDauRapid();
                 partida.getHistorialAccions().add(
-                        jugador.getNickname() + " obté un dau ràpid ⚡"
+                        jugador.getNickname() + " obté un dau ràpid "
                 );
                 break;
 
             case OBTENIR_DAU_LENT:
                 jugador.afegirDauLent();
                 partida.getHistorialAccions().add(
-                        jugador.getNickname() + " obté un dau lent 🐢"
+                        jugador.getNickname() + " obté un dau lent "
                 );
                 break;
         }

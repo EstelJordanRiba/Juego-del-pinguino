@@ -11,7 +11,7 @@ public class Taulell {
 
     private static final Random random = new Random();
 
-    // Percentatges
+ 
     private static final double P_OS = 0.08;
     private static final double P_FORAT = 0.12;
     private static final double P_TRINEU = 0.10;
@@ -38,19 +38,17 @@ public class Taulell {
         return caselles;
     }
 
-    // =========================
-    // GENERACIÓ TAULELL
-    // =========================
+    
 
     public final void generarTaulellAleatori() {
         caselles.clear();
 
-        // 🔥 IMPORTANT → inicialitzar correctament
+     
         for (int pos = 0; pos <= numCaselles; pos++) {
             caselles.add(null);
         }
 
-        // Inici i final
+       
         caselles.set(0, CasellaFactory.crearNormal(0, 0));
         caselles.set(numCaselles, CasellaFactory.crearNormal(numCaselles, numCaselles));
 
@@ -65,9 +63,7 @@ public class Taulell {
         assegurarMinimTrineus(2);
     }
 
-    // =========================
-    // ACCESSOS
-    // =========================
+
 
     public Casella obtenirCasella(int posicio) {
         if (posicio < 0) posicio = 0;
@@ -82,14 +78,11 @@ public class Taulell {
         return c;
     }
 
-    // 🔥 alias per compatibilitat amb altres classes
+  
     public Casella getCasella(int posicio) {
         return obtenirCasella(posicio);
     }
 
-    // =========================
-    // MECÀNIQUES
-    // =========================
 
     public int buscarSeguentTrineu(int posicioActual) {
 
@@ -135,10 +128,6 @@ public class Taulell {
                 ", caselles=" + caselles.size() +
                 '}';
     }
-
-    // =========================
-    // FACTORY
-    // =========================
 
     public static class CasellaFactory {
 

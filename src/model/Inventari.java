@@ -20,9 +20,7 @@ public class Inventari {
         this.bolesNeu = 0;
     }
 
-    // =========================
-    // GETTERS
-    // =========================
+   
 
     public int getDausNormals() { return dausNormals; }
     public int getDausRapids() { return dausRapids; }
@@ -34,9 +32,7 @@ public class Inventari {
         return dausNormals + dausRapids + dausLents;
     }
 
-    // =========================
-    // AFEGIR ITEMS
-    // =========================
+    
 
     public boolean afegirPeix() {
         if (peixos < MAX_PEIXOS) {
@@ -78,9 +74,7 @@ public class Inventari {
         return false;
     }
 
-    // =========================
-    // GASTAR ITEMS
-    // =========================
+   
 
     public boolean gastarPeix() {
         if (peixos > 0) {
@@ -122,9 +116,7 @@ public class Inventari {
         return false;
     }
 
-    // =========================
-    // UTILITATS
-    // =========================
+    
 
     public boolean teBolesNeu() { return bolesNeu > 0; }
     public boolean tePeixos() { return peixos > 0; }

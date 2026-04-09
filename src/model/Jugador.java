@@ -46,9 +46,7 @@ public class Jugador {
     public EstatJugador getEstat() { return estat; }
     public Inventari getInventari() { return inventari; }
 
-    // =========================
-    // SETTERS
-    // =========================
+  
 
     public void setEstat(EstatJugador estat) {
         this.estat = estat;
@@ -64,9 +62,7 @@ public class Jugador {
         }
     }
 
-    // =========================
-    // LÒGICA DE TORN
-    // =========================
+    
 
     public boolean potJugar() {
 
@@ -88,9 +84,7 @@ public class Jugador {
         this.tornsCongelat = torns;
     }
 
-    // =========================
-    // ACCIONS
-    // =========================
+    
 
     public int tirarDau(Dau dau) {
         return dau.tirar();
@@ -127,9 +121,7 @@ public class Jugador {
         return inventari.gastarPeix();
     }
 
-    // =========================
-    // INVENTARI
-    // =========================
+   
 
     public void afegirPeix() {
         inventari.afegirPeix();
@@ -147,9 +139,7 @@ public class Jugador {
         inventari.afegirDauLent();
     }
 
-    // =========================
-    // OBJECT
-    // =========================
+   
 
     @Override
     public String toString() {

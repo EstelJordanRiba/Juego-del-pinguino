@@ -18,7 +18,7 @@ public class Casella_terra_trencadis extends Casella {
             jugador.tornarInici();
 
             partida.getHistorialAccions().add(
-                    jugador.getNickname() + " trenca el gel ❄ i cau a l'inici"
+                    jugador.getNickname() + " trenca el gel i cau a l'inici"
             );
 
         } else if (totalObjectes > 0) {
@@ -26,7 +26,7 @@ public class Casella_terra_trencadis extends Casella {
             jugador.setEstat(Jugador.EstatJugador.CONGELAT);
 
             partida.getHistorialAccions().add(
-                    jugador.getNickname() + " queda congelat ❄ (massa pes)"
+                    jugador.getNickname() + " queda congelat (massa pes)"
             );
 
         } else {

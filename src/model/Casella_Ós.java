@@ -15,7 +15,7 @@ public class Casella_Ós extends Casella {
 
             if (usat) {
                 partida.getHistorialAccions().add(
-                        jugador.getNickname() + " suborna l'ós amb un peix 🐟"
+                        jugador.getNickname() + " suborna l'ós amb un peix "
                 );
                 return;
             }
@@ -24,7 +24,7 @@ public class Casella_Ós extends Casella {
         jugador.tornarInici();
 
         partida.getHistorialAccions().add(
-                jugador.getNickname() + " és atacat per l'ós 🐻 i torna a l'inici"
+                jugador.getNickname() + " és atacat per l'ós  i torna a l'inici"
         );
     }
 }

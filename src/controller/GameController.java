@@ -86,7 +86,7 @@ public class GameController {
         // Guanyador
         if (partida.hiHaGuanyador()) {
 
-            labelInfo.setText("🏆 Guanyador: " + partida.getGuanyador().getNickname());
+            labelInfo.setText(" Guanyador: " + partida.getGuanyador().getNickname());
 
             btnTirarDau.setDisable(true);
             btnAtacar.setDisable(true);

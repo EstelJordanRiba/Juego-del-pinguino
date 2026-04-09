@@ -249,9 +249,7 @@ public class PantallaJuego {
         actualitzarTot();
     }
 
-    // =========================
-    // LOGICA
-    // =========================
+
 
     private Jugador buscarPrimerRivalDisponible(Jugador atacant) {
         for (Jugador j : partida.getJugadors()) {

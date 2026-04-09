@@ -17,7 +17,7 @@ public class FocaIA extends Jugador {
             tornsBloquejada--;
 
             partida.getHistorialAccions().add(
-                    getNickname() + " està bloquejada 🧊 (" + tornsBloquejada + " torns)"
+                    getNickname() + " està bloquejada  (" + tornsBloquejada + " torns)"
             );
 
             return;
@@ -32,7 +32,7 @@ public class FocaIA extends Jugador {
                 atacar(j, partida);
 
                 partida.getHistorialAccions().add(
-                        getNickname() + " ataca " + j.getNickname() + " 🦭"
+                        getNickname() + " ataca " + j.getNickname() + " "
                 );
 
                 return;
@@ -81,7 +81,7 @@ public class FocaIA extends Jugador {
         jugador.tornarInici();
 
         partida.getHistorialAccions().add(
-                jugador.getNickname() + " és enviat a l'inici per la foca 🦭"
+                jugador.getNickname() + " és enviat a l'inici per la foca "
         );
     }
 

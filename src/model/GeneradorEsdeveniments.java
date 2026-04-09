@@ -17,25 +17,25 @@ public class GeneradorEsdeveniments {
 
         esdeveniments.add(new Esdeveniment(
                 Esdeveniment.TipusEsdeveniment.OBTENIR_PEIX,
-                "🐟 Has trobat un peix",
+                " Has trobat un peix",
                 0.25
         ));
 
         esdeveniments.add(new Esdeveniment(
                 Esdeveniment.TipusEsdeveniment.OBTENIR_BOLES_NEU,
-                "❄ Aconsegueixes boles de neu",
+                " Aconsegueixes boles de neu",
                 0.45
         ));
 
         esdeveniments.add(new Esdeveniment(
                 Esdeveniment.TipusEsdeveniment.OBTENIR_DAU_LENT,
-                "🐢 Has obtingut un dau lent",
+                " Has obtingut un dau lent",
                 0.25
         ));
 
         esdeveniments.add(new Esdeveniment(
                 Esdeveniment.TipusEsdeveniment.OBTENIR_DAU_RAPID,
-                "⚡ Has obtingut un dau ràpid",
+                " Has obtingut un dau ràpid",
                 0.05
         ));
     }

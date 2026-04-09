@@ -15,7 +15,7 @@ public class Casella_forat extends Casella {
         jugador.setPosicioActual(desti, partida.getTaulell().getNumCaselles());
 
         partida.getHistorialAccions().add(
-                jugador.getNickname() + " cau en un forat 🕳 i va a la casella " + desti
+                jugador.getNickname() + " cau en un forat i va a la casella " + desti
         );
     }
 }

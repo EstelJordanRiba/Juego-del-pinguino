@@ -8,16 +8,16 @@ public class JugadorView {
     public String mostrarInfoJugador(Jugador jugador) {
 
         return "👤 " + jugador.getNickname() +
-               " | Posició: " + jugador.getPosicioActual() +
-               " | Estat: " + jugador.getEstat();
+               " Posició: " + jugador.getPosicioActual() +
+               " Estat: " + jugador.getEstat();
     }
 
     public String mostrarInventari(Jugador jugador) {
 
         Inventari inv = jugador.getInventari();
 
-        return "🎒 Peixos: " + inv.getPeixos() +
-               " | ❄ Boles: " + inv.getBolesNeu() +
-               " | 🎲 Daus: " + inv.getTotalDaus();
+        return " Peixos: " + inv.getPeixos() +
+               "  Boles: " + inv.getBolesNeu() +
+               "  Daus: " + inv.getTotalDaus();
     }
 }

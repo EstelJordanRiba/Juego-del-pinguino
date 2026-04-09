@@ -16,7 +16,7 @@ public class PartidaView {
     public String mostrarGanador(Partida partida) {
 
         if (partida.hiHaGuanyador()) {
-            return "🏆 Guanyador: " + partida.getGuanyador().getNickname();
+            return " Guanyador: " + partida.getGuanyador().getNickname();
         }
 
         return "";

@@ -26,9 +26,7 @@ public class Partida {
         this.guanyador = null;
     }
 
-    // =========================
-    // GETTERS
-    // =========================
+   
 
     public int getIdPartida() {
         return idPartida;
@@ -61,9 +59,7 @@ public class Partida {
         return historialAccions.get(historialAccions.size() - 1);
     }
 
-    // =========================
-    // GESTIÓ PARTIDA
-    // =========================
+ 
 
     public void afegirJugador(Jugador j) {
         jugadors.add(j);
@@ -82,20 +78,19 @@ public class Partida {
         seguentTorn();
     }
 
-    // =========================
-    // ACCIONS DE JOC
-    // =========================
+    
+   
 
     public void jugarTornTirarDau(Dau dau) {
 
-        // 🔥 1. Si ja hi ha guanyador → parar
+      
         if (hiHaGuanyador()) return;
 
         Jugador jugador = obtenirJugadorActual();
 
-        // 🔥 2. Control jugador congelat
+       
         if (!jugador.potJugar()) {
-            registrar(jugador.getNickname() + " està congelat ❄ i perd el torn");
+            registrar(jugador.getNickname() + " està congelat  i perd el torn");
             seguentTorn();
             return;
         }
@@ -110,14 +105,14 @@ public class Partida {
         registrar(jugador.getNickname() + " ha tret " + tirada +
                 " i ha passat de " + posAbans + " a " + posDespres);
 
-        // 🔥 3. Comprovar guanyador
+      
         if (jugador.esGuanyador(taulell.getNumCaselles())) {
             guanyador = jugador;
             registrar("🎉 " + jugador.getNickname() + " ha guanyat la partida!");
             return;
         }
 
-        // 🔥 4. Aplicar efecte casella
+    
         Casella casella = taulell.obtenirCasella(posDespres);
         casella.aplicarEfecte(jugador, this);
 
@@ -130,9 +125,8 @@ public class Partida {
 
         Jugador atacant = obtenirJugadorActual();
 
-        // 🔥 control congelat
         if (!atacant.potJugar()) {
-            registrar(atacant.getNickname() + " està congelat ❄ i no pot atacar");
+            registrar(atacant.getNickname() + " està congelat  i no pot atacar");
             seguentTorn();
             return false;
         }
@@ -141,7 +135,7 @@ public class Partida {
 
         if (ok) {
             registrar(atacant.getNickname() + " ha atacat " +
-                    objectiu.getNickname() + " amb bola de neu ❄");
+                    objectiu.getNickname() + " amb bola de neu ");
         } else {
             registrar(atacant.getNickname() + " no té boles de neu.");
         }
@@ -150,9 +144,7 @@ public class Partida {
         return ok;
     }
 
-    // =========================
-    // ESDEVENIMENTS
-    // =========================
+   
 
     public Esdeveniment generarEsdevenimentAleatori() {
         return generadorEsdeveniments.generarAleatori();
@@ -165,9 +157,7 @@ public class Partida {
         registrar("Event: " + e.getDescripcio());
     }
 
-    // =========================
-    // GUANYADOR
-    // =========================
+    
 
     public boolean hiHaGuanyador() {
         return guanyador != null;
@@ -177,17 +167,12 @@ public class Partida {
         return guanyador;
     }
 
-    // =========================
-    // HISTORIAL
-    // =========================
-
+   
     private void registrar(String missatge) {
         historialAccions.add(missatge);
     }
 
-    // =========================
-    // GUARDAR / CARREGAR
-    // =========================
+ 
 
     public void guardarEstat() {
         registrar("Partida guardada.");
