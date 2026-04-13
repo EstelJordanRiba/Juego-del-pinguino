@@ -9,12 +9,14 @@ public abstract class Jugador implements Serializable {
     private String nombre;
     private String color;
     private int turnosPerdidos;
+    private Inventario inventario;
 
     public Jugador(String nombre, String color, int posicion) {
         this.posicion = posicion;
         this.nombre = nombre;
         this.color = color;
         this.turnosPerdidos = 0;
+        this.inventario = new Inventario();
     }
 
     public int getPosicion() {
@@ -71,5 +73,13 @@ public abstract class Jugador implements Serializable {
         if (this.posicion > 49) {
             this.posicion = 49;
         }
+    }
+
+    public Inventario getInventario() {
+        return inventario;
+    }
+
+    public void setInventario(Inventario inventario) {
+        this.inventario = inventario;
     }
 }
