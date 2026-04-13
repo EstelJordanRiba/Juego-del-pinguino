@@ -12,46 +12,56 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx.base.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx.controls.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx.fxml.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx.graphics.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx.media.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx.swing.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx.web.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx-swt.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Downloads/ojdbc8.jar"/>
+	<classpathentry kind="lib" path="src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx.base.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx.controls.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx.fxml.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx.graphics.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx.media.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx.properties">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx.swing.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx.web.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/openjfx-21.0.10_windows-x64_bin-sdk/javafx-sdk-21.0.10/lib/javafx-swt.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/SQL_Library/ojdbc8.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
