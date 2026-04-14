@@ -8,6 +8,7 @@ public class Trineo extends Casilla {
     }
 
     @Override
-    public void realizarAccion() {
+    public void realizarAccion(Jugador jugador) {
+        // codi
     }
 }

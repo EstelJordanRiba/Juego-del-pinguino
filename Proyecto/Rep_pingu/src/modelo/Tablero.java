@@ -73,6 +73,10 @@ public class Tablero implements Serializable {
         return 0;
     }
 
+    public Casilla getCasilla(int posicion) {
+        return casillas.get(posicion);
+    }
+
     public void actualizarTablero() {
     }
 }

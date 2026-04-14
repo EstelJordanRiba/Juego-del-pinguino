@@ -65,15 +65,23 @@ public class GestorPartida {
         String mensaje = actual.getNombre() + " avanza " + resultado + " casillas.";
 
         if (actual instanceof Pinguino) {
-            Casilla casilla = partida.getTablero().getCasillas().get(actual.getPosicion());
-            mensaje = gestorTablero.ejecutarCasilla(partida, (Pinguino) actual, casilla);
+            Casilla casilla = partida.getTablero().getCasilla(actual.getPosicion());
+            String mensajeCasilla = gestorTablero.ejecutarCasilla(partida, (Pinguino) actual, casilla);
+
+            if (mensajeCasilla != null && !mensajeCasilla.isEmpty()) {
+                mensaje = actual.getNombre() + " avanza " + resultado + " casillas. " + mensajeCasilla;
+            }
+
             comprobarChoquesJugadores();
         }
 
         partida.comprobarGanador();
+
         if (!partida.isFinalizada()) {
             siguienteTurno();
         }
+
+        partida.setUltimoEvento(mensaje);
         return mensaje;
     }
 

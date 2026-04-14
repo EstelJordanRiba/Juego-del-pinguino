@@ -3,47 +3,87 @@ package controlador;
 import modelo.*;
 
 public class GestorTablero {
-    public String ejecutarCasilla(Partida partida, Pinguino p, Casilla c) {
-        String mensaje = p.getNombre() + " ha caído en una casilla normal.";
-        Tablero tablero = partida.getTablero();
 
-        if (c instanceof Oso) {
-            if (p.getInv().gastarItem("pez", 1)) {
-                mensaje = p.getNombre() + " ha usado un pez y ha evitado al oso.";
+    public String ejecutarCasilla(Partida partida, Pinguino jugador, Casilla casilla) {
+        String mensaje = "";
+
+        if (casilla instanceof Oso) {
+            if (jugador.getInv().gastarItem("pez", 1)) {
+                mensaje = jugador.getNombre() + " usa un pez para evitar al oso.";
             } else {
-                p.setPosicion(0);
-                mensaje = p.getNombre() + " ha sido atacado por el oso y vuelve al inicio.";
+                jugador.setPosicion(0);
+                mensaje = jugador.getNombre() + " ha sido atrapado por el oso y vuelve al inicio.";
             }
-        } else if (c instanceof Agujero) {
-            int nuevaPos = tablero.buscarAgujeroAnterior(c.getPosicion());
-            p.setPosicion(nuevaPos);
-            mensaje = p.getNombre() + " ha caído en un agujero y retrocede a la casilla " + nuevaPos + ".";
-        } else if (c instanceof Trineo) {
-            int nuevaPos = tablero.buscarSiguienteTrineo(c.getPosicion());
-            p.setPosicion(nuevaPos);
-            mensaje = p.getNombre() + " usa un trineo y avanza hasta la casilla " + nuevaPos + ".";
-        } else if (c instanceof Evento) {
-            GestorJugador gestorJugador = new GestorJugador();
-            gestorJugador.piguinoEvento(p);
-            mensaje = p.getNombre() + " ha activado una casilla de evento.";
-        } else if (c instanceof SueloQuebradizo) {
-            int total = p.getInv().totalObjetos();
-            if (total > 5) {
-                p.setPosicion(0);
-                mensaje = p.getNombre() + " cae por llevar demasiado inventario y vuelve al inicio.";
-            } else if (total > 0) {
-                p.perderTurno();
-                mensaje = p.getNombre() + " pisa hielo quebradizo y pierde el siguiente turno.";
+
+        } else if (casilla instanceof Agujero) {
+            int destino = partida.getTablero().buscarAgujeroAnterior(jugador.getPosicion());
+            jugador.setPosicion(destino);
+            mensaje = jugador.getNombre() + " cae en un agujero y retrocede a la casilla " + destino + ".";
+
+        } else if (casilla instanceof Trineo) {
+            int destino = partida.getTablero().buscarSiguienteTrineo(jugador.getPosicion());
+            if (destino != jugador.getPosicion()) {
+                jugador.setPosicion(destino);
+                mensaje = jugador.getNombre() + " usa un trineo y avanza hasta la casilla " + destino + ".";
             } else {
-                mensaje = p.getNombre() + " cruza el hielo quebradizo sin problemas.";
+                mensaje = jugador.getNombre() + " cae en el último trineo y no avanza más.";
             }
+
+        } else if (casilla instanceof Evento) {
+            int evento = (int) (Math.random() * 6);
+
+            switch (evento) {
+                case 0:
+                    jugador.añadirItem(new Pez("pez", 1));
+                    mensaje = jugador.getNombre() + " consigue 1 pez.";
+                    break;
+                case 1:
+                    int bolas = (int) (Math.random() * 3) + 1;
+                    jugador.añadirItem(new BolaDeNieve("bola", bolas));
+                    mensaje = jugador.getNombre() + " consigue " + bolas + " bolas de nieve.";
+                    break;
+                case 2:
+                    jugador.añadirItem(new Dado("rapido", 1, 5, 10));
+                    mensaje = jugador.getNombre() + " consigue un dado rápido.";
+                    break;
+                case 3:
+                    jugador.añadirItem(new Dado("lento", 1, 1, 3));
+                    mensaje = jugador.getNombre() + " consigue un dado lento.";
+                    break;
+                case 4:
+                    jugador.perderTurno();
+                    mensaje = jugador.getNombre() + " pierde un turno.";
+                    break;
+                default:
+                    Item item = jugador.getInv().buscarPorNombre("bola");
+                    if (item == null) {
+                        item = jugador.getInv().buscarPorNombre("pez");
+                    }
+                    if (item == null) {
+                        item = jugador.getInv().buscarPorNombre("rapido");
+                    }
+                    if (item == null) {
+                        item = jugador.getInv().buscarPorNombre("lento");
+                    }
+
+                    if (item != null) {
+                        item.restarCantidad(1);
+                        jugador.getInv().eliminarVacios();
+                        mensaje = jugador.getNombre() + " pierde 1 objeto del inventario.";
+                    } else {
+                        mensaje = jugador.getNombre() + " no tenía objetos que perder.";
+                    }
+                    break;
+            }
+
+        } else if (casilla instanceof SueloQuebradizo) {
+            mensaje = ((SueloQuebradizo) casilla).aplicarEfecto(jugador);
+
+        } else {
+            mensaje = jugador.getNombre() + " cae en una casilla normal.";
         }
 
         partida.setUltimoEvento(mensaje);
         return mensaje;
-    }
-
-    public void comprobarFinTurno(Partida partida) {
-        partida.comprobarGanador();
     }
 }

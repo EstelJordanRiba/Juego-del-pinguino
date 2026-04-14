@@ -13,12 +13,14 @@ public class GestorJugador {
 
     public void jugadorSeMueve(Jugador j, int pasos, Tablero t) {
         int nuevaPos = j.getPosicion() + pasos;
+
         if (nuevaPos > 49) {
             nuevaPos = 49;
         }
         if (nuevaPos < 0) {
             nuevaPos = 0;
         }
+
         j.setPosicion(nuevaPos);
     }
 

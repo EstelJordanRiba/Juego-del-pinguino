@@ -8,22 +8,24 @@ public class SueloQuebradizo extends Casilla {
     }
 
     @Override
-    public void realizarAccion() {
+    public void realizarAccion(Jugador jugador) {
+        if (jugador instanceof Pinguino) {
+            aplicarEfecto((Pinguino) jugador);
+        }
     }
 
-    public void realizarAccion(Jugador jugador) {
-        int cantidad = jugador.getInventario().totalObjetos();
-
+    public String aplicarEfecto(Pinguino p) {
+        int cantidad = p.getInv().totalObjetos();
+        
+        
         if (cantidad > 5) {
-            jugador.setPosicion(0);
-            System.out.println(jugador.getNombre() + " cau pel terra trencadís i torna a l'inici!");
-
-        } else if (cantidad >= 1) {
-            jugador.perderTurno();
-            System.out.println(jugador.getNombre() + " perd un torn pel terra trencadís.");
-
+            p.setPosicion(0);
+            return p.getNombre() + " cae por el suelo quebradizo y vuelve al inicio.";
+        } else if (cantidad > 1 && cantidad <= 5) {
+            p.perderTurno();
+            return p.getNombre() + " pierde un turno por el suelo quebradizo.";
         } else {
-            System.out.println(jugador.getNombre() + " passa sense penalització.");
+            return p.getNombre() + " pasa sin penalización por el suelo quebradizo.";
         }
     }
 }

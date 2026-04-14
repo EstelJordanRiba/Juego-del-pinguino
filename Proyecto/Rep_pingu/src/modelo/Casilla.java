@@ -19,5 +19,5 @@ public abstract class Casilla implements Serializable {
         this.posicion = posicion;
     }
 
-    public abstract void realizarAccion();
+    public abstract void realizarAccion(Jugador jugador);
 }

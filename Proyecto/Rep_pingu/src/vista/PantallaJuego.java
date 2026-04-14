@@ -148,12 +148,14 @@ public class PantallaJuego {
         Jugador actual = gestorPartida.getPartida().getJugadorActual();
         int origen = actual.getPosicion();
         Item item = ((Pinguino) actual).getInv().buscarPorNombre("normal");
+
         if (item instanceof Dado) {
             String mensaje = gestorPartida.jugarTurnoConDado((Dado) item);
             int destino = actual.getPosicion();
+
             dadoResultText.setText(mensaje);
-            eventos.setText(gestorPartida.getPartida().getUltimoEvento());
             refrescarPantalla();
+
             if (actual == gestorPartida.getPartida().getJugadores().get(0)) {
                 animarMovimiento(P1, origen, destino);
             } else {
@@ -161,7 +163,7 @@ public class PantallaJuego {
             }
         }
     }
-
+    
     @FXML
     private void handleRapido() {
         usarDadoEspecial("rapido");
@@ -177,15 +179,20 @@ public class PantallaJuego {
         if (!(actual instanceof Pinguino)) {
             return;
         }
+
         Pinguino p = (Pinguino) actual;
         Item item = p.getInv().buscarPorNombre(nombre);
+
         if (item instanceof Dado && item.getCantidad() > 0) {
             int origen = actual.getPosicion();
             p.getInv().gastarItem(nombre, 1);
+
             String mensaje = gestorPartida.jugarTurnoConDado((Dado) item);
             int destino = actual.getPosicion();
+
             dadoResultText.setText(mensaje);
             refrescarPantalla();
+
             if (actual == gestorPartida.getPartida().getJugadores().get(0)) {
                 animarMovimiento(P1, origen, destino);
             } else {
@@ -195,7 +202,6 @@ public class PantallaJuego {
             eventos.setText("No tienes ese dado disponible.");
         }
     }
-
     @FXML
     private void handlePeces() {
         eventos.setText("Los peces se usan automáticamente al caer en el oso.");

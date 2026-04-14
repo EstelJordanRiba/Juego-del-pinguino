@@ -7,7 +7,10 @@ public class Evento extends Casilla {
         super(posicion);
     }
 
+   
     @Override
-    public void realizarAccion() {
+    public void realizarAccion(Jugador jugador) {
+        // codi
     }
-}
+    }
+
