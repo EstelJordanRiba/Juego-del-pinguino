@@ -12,5 +12,5 @@ public class Agujero extends Casilla {
     public void realizarAccion(Jugador jugador) {
         // codi
     }
-    }
+    	}
 
