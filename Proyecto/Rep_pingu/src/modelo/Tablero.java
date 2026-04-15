@@ -1,11 +1,9 @@
 package modelo;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Tablero implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Tablero {
 
     private ArrayList<Casilla> casillas;
 

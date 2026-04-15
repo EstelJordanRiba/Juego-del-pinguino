@@ -1,10 +1,8 @@
 package modelo;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Partida implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Partida {
 
     private Tablero tablero;
     private ArrayList<Jugador> jugadores;
@@ -85,6 +83,11 @@ public class Partida implements Serializable {
         if (jugadores == null || jugadores.isEmpty()) {
             return null;
         }
+
+        if (jugadorActual < 0 || jugadorActual >= jugadores.size()) {
+            jugadorActual = 0;
+        }
+
         return jugadores.get(jugadorActual);
     }
 

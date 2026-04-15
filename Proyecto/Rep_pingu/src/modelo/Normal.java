@@ -1,7 +1,6 @@
 package modelo;
 
 public class Normal extends Casilla {
-    private static final long serialVersionUID = 1L;
 
     public Normal(int posicion) {
         super(posicion);
@@ -9,7 +8,6 @@ public class Normal extends Casilla {
 
     @Override
     public void realizarAccion(Jugador jugador) {
-        // codi
+        // No hace nada
     }
-    }
-
+}

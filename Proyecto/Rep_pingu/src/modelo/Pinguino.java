@@ -1,7 +1,6 @@
 package modelo;
 
 public class Pinguino extends Jugador {
-    private static final long serialVersionUID = 1L;
 
     private Inventario inv;
 
@@ -39,6 +38,7 @@ public class Pinguino extends Jugador {
     public void añadirItem(Item i) {
         String nombre = i.getNombre().toLowerCase();
         int maximo = 99;
+
         if (nombre.equals("normal") || nombre.equals("rapido") || nombre.equals("lento")) {
             maximo = 3;
         } else if (nombre.equals("pez")) {
@@ -46,6 +46,7 @@ public class Pinguino extends Jugador {
         } else if (nombre.equals("bola")) {
             maximo = 6;
         }
+
         inv.añadirOActualizar(i, maximo);
     }
 
