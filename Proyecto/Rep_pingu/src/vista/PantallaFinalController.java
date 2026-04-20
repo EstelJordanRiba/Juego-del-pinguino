@@ -20,7 +20,7 @@ public class PantallaFinalController {
     @FXML
     private void volverMenu() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/resources/PantallaMenu.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/PantallaMenu.fxml"));
             Stage stage = (Stage) textoGanador.getScene().getWindow();
             stage.setScene(new Scene(root));
         } catch (Exception e) {
