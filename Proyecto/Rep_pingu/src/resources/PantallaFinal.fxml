@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" prefHeight="400.0" prefWidth="640.0" spacing="20.0" style="-fx-background-color: linear-gradient(to bottom, #0b2a4a, #1f6aa5);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vista.PantallaFinalController">
+
+   <children>
+      <AnchorPane prefHeight="260.0" prefWidth="640.0" style="-fx-background-color: linear-gradient(to bottom, #0b2a4a, #1f6aa5);">
+         <children>
+            <Label fx:id="textoGanador" layoutY="162.0" style="-fx-text-fill: white; -fx-font-size: 58px; -fx-font-weight: bold;" text="¡Victoria Final!" textAlignment="CENTER" AnchorPane.leftAnchor="140.0">
+               <font>
+                  <Font size="46.0" />
+               </font>
+            </Label>
+
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="-15.0" layoutY="14.0" preserveRatio="true">
+               <image>
+                  <Image url="@image-1629876500aZb.png" />
+               </image>
+            </ImageView>
+
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="488.0" layoutY="14.0" preserveRatio="true">
+               <image>
+                  <Image url="@image-1629876500aZb.png" />
+               </image>
+            </ImageView>
+
+            <ImageView fitHeight="148.0" fitWidth="144.0" layoutX="253.0" layoutY="-5.0" preserveRatio="true">
+               <image>
+                  <Image url="@image-1630065125sB5.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+
+      <StackPane prefHeight="129.0" prefWidth="492.0" style="-fx-background-color: rgba(255, 255, 255, 0.15); -fx-background-radius: 20; -fx-padding: 20;">
+         <children>
+            <Button fx:id="btnJugarDeNuevo" mnemonicParsing="false" onAction="#volverMenu" style="-fx-background-color: #ffcc33; -fx-text-fill: #000; -fx-font-size: 18px; -fx-font-weight: bold; -fx-background-radius: 15;" text="Jugar de nuevo" />
+         </children>
+      </StackPane>
+
+      <ImageView fitHeight="150.0" fitWidth="200.0" preserveRatio="true">
+         <image>
+            <Image url="@fish-clipart-lg.png" />
+         </image>
+      </ImageView>
+   </children>
+</VBox>
