@@ -1,7 +1,6 @@
 package modelo;
 
 public class Trineo extends Casilla {
-    private static final long serialVersionUID = 1L;
 
     public Trineo(int posicion) {
         super(posicion);
@@ -9,6 +8,6 @@ public class Trineo extends Casilla {
 
     @Override
     public void realizarAccion(Jugador jugador) {
-        // codi
+        // lógica del trineo (la tienes en el gestor)
     }
 }

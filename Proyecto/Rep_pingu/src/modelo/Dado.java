@@ -30,6 +30,7 @@ public class Dado extends Item {
     }
 
     public int tirar(Random r) {
-        return r.nextInt((max - min) + 1) + min;
+    	return 50;
+        //return r.nextInt((max - min) + 1) + min;
     }
 }

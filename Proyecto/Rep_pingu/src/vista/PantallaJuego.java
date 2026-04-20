@@ -10,10 +10,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.Label;
+import javafx.geometry.Pos;
 
 import controlador.GestorPartida;
 import modelo.Dado;
@@ -44,10 +49,16 @@ public class PantallaJuego {
     @FXML private Circle P3;
     @FXML private Circle P4;
 
+   
+
     private GestorPartida gestorPartida;
     private static final int COLUMNS = 5;
     private static final String TAG_CASILLA_TEXT = "CASILLA_TEXT";
+    
+    @FXML private StackPane rootStack;
 
+  
+    
     @FXML
     private void initialize() {
         gestorPartida = new GestorPartida();
@@ -55,6 +66,26 @@ public class PantallaJuego {
         mostrarTiposDeCasillasEnTablero(gestorPartida.getPartida().getTablero());
         refrescarPantalla();
     }
+    
+    private void abrirPantallaFinal(Jugador ganador) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/PantallaFinal.fxml"));
+            Parent root = loader.load();
+
+            PantallaFinalController controller = loader.getController();
+            controller.setGanador(ganador);
+
+            Stage stage = (Stage) tablero.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Victoria");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            
+            
+            }
+        }
+    
 
     private void mostrarTiposDeCasillasEnTablero(Tablero t) {
         tablero.getChildren().removeIf(node -> TAG_CASILLA_TEXT.equals(node.getUserData()));
@@ -73,12 +104,22 @@ public class PantallaJuego {
     }
 
     private void refrescarPantalla() {
+
         eventos.setText(gestorPartida.getPartida().getUltimoEvento());
+
         actualizarJugadorEnTablero(P1, gestorPartida.getPartida().getJugadores().get(0).getPosicion());
         actualizarJugadorEnTablero(P2, gestorPartida.getPartida().getJugadores().get(1).getPosicion());
-        actualizarInventario();
-    }
 
+        actualizarInventario();
+
+        if (gestorPartida.getPartida().isFinalizada()) {
+            Jugador ganador = gestorPartida.getPartida().getGanador();
+            abrirPantallaFinal(ganador);
+        }
+    }
+    
+   
+    
     private void actualizarInventario() {
         Pinguino actual = (Pinguino) gestorPartida.getPartida().getJugadorActual();
         rapido_t.setText("Dado rápido: " + actual.getInv().getCantidad("rapido"));
@@ -160,6 +201,8 @@ public class PantallaJuego {
                 animarMovimiento(P1, origen, destino);
             } else {
                 animarMovimiento(P2, origen, destino);
+                refrescarPantalla();
+                
             }
         }
     }

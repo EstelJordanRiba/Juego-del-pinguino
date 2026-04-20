@@ -53,7 +53,7 @@ public class PantallaMenu {
         String password = passField.getText();
         if (!username.isEmpty() && !password.isEmpty()) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/PantallaJuego.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/PantallaJuego.fxml"));
                 Parent pantallaJuegoRoot = loader.load();
                 Scene pantallaJuegoScene = new Scene(pantallaJuegoRoot);
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

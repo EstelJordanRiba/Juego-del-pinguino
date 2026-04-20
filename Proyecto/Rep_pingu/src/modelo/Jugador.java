@@ -1,9 +1,6 @@
 package modelo;
 
-import java.io.Serializable;
-
-public abstract class Jugador implements Serializable {
-    private static final long serialVersionUID = 1L;
+public abstract class Jugador {
 
     private int posicion;
     private String nombre;
@@ -67,9 +64,11 @@ public abstract class Jugador implements Serializable {
 
     public void moverPosicion(int pasos) {
         this.posicion += pasos;
+
         if (this.posicion < 0) {
             this.posicion = 0;
         }
+
         if (this.posicion > 49) {
             this.posicion = 49;
         }

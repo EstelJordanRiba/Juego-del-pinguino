@@ -1,10 +1,8 @@
 package modelo;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Inventario implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Inventario {
 
     private ArrayList<Item> lista;
 

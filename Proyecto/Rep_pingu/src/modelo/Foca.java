@@ -1,7 +1,6 @@
 package modelo;
 
 public class Foca extends Jugador {
-    private static final long serialVersionUID = 1L;
 
     private boolean soborno;
     private int turnosBloqueada;
@@ -30,6 +29,7 @@ public class Foca extends Jugador {
 
     public void aplastarJugador(Pinguino p) {
         int mitad = p.getInv().totalObjetos() / 2;
+
         while (mitad > 0) {
             if (p.getInv().gastarItem("bola", 1)) {
                 mitad--;
@@ -45,6 +45,7 @@ public class Foca extends Jugador {
                 mitad = 0;
             }
         }
+
         p.getInv().eliminarVacios();
     }
 

@@ -1,7 +1,6 @@
 package modelo;
 
 public class Oso extends Casilla {
-    private static final long serialVersionUID = 1L;
 
     public Oso(int posicion) {
         super(posicion);
@@ -9,6 +8,6 @@ public class Oso extends Casilla {
 
     @Override
     public void realizarAccion(Jugador jugador) {
-        // codi
+        // lógica del oso (la tienes en el gestor)
     }
 }
