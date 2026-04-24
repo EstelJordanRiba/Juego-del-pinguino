@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vista.PantallaConfiguracionController" style="-fx-background-color: #e0f7fa;">
+
+    <center>
+        <VBox alignment="CENTER" spacing="20" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);" maxWidth="500" maxHeight="500">
+            <Label text="Configuración de Jugadores" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #007bb5;"/>
+            
+            <HBox alignment="CENTER" spacing="10">
+                <Label text="Número de Jugadores:" style="-fx-font-size: 16px;"/>
+                <ComboBox fx:id="numJugadoresCombo" prefWidth="80"/>
+            </HBox>
+
+            <VBox spacing="15">
+                <HBox fx:id="rowP1" spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Jugador 1:" prefWidth="70"/>
+                    <TextField fx:id="nombreP1" promptText="Nombre P1" prefWidth="150"/>
+                    <ComboBox fx:id="colorP1" prefWidth="100"/>
+                </HBox>
+
+                <HBox fx:id="rowP2" spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Jugador 2:" prefWidth="70"/>
+                    <TextField fx:id="nombreP2" promptText="Nombre P2" prefWidth="150"/>
+                    <ComboBox fx:id="colorP2" prefWidth="100"/>
+                </HBox>
+
+                <HBox fx:id="rowP3" spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Jugador 3:" prefWidth="70"/>
+                    <TextField fx:id="nombreP3" promptText="Nombre P3" prefWidth="150"/>
+                    <ComboBox fx:id="colorP3" prefWidth="100"/>
+                </HBox>
+
+                <HBox fx:id="rowP4" spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Jugador 4:" prefWidth="70"/>
+                    <TextField fx:id="nombreP4" promptText="Nombre P4" prefWidth="150"/>
+                    <ComboBox fx:id="colorP4" prefWidth="100"/>
+                </HBox>
+            </VBox>
+
+            <Button fx:id="startButton" text="¡Empezar Partida!" onAction="#handleStartGame" style="-fx-background-color: #007bb5; -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20;"/>
+        </VBox>
+    </center>
+    
+    <padding>
+        <Insets top="50" right="50" bottom="50" left="50"/>
+    </padding>
+
+</BorderPane>

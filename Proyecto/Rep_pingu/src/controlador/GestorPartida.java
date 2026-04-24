@@ -2,7 +2,6 @@ package controlador;
 
 import java.util.ArrayList;
 import java.util.Random;
-
 import modelo.*;
 
 public class GestorPartida {
@@ -20,68 +19,117 @@ public class GestorPartida {
         this.random = new Random();
     }
 
-    public void nuevaPartida() {
+    /**
+     * Versión actualizada para permitir hasta 4 humanos + 1 IA.
+     */
+    public void nuevaPartida(int numHumanos) {
         this.partida = new Partida();
         ArrayList<Jugador> jugadores = new ArrayList<Jugador>();
 
-        Inventario inv1 = new Inventario();
-        inv1.añadirOActualizar(new Dado("normal", 1, 1, 6), 3);
-        jugadores.add(new Pinguino("Jugador 1", "Azul", 0, inv1));
+        String[] colores = {"Azul", "Rojo", "Verde", "Amarillo"};
+        
+        // Añadir los jugadores humanos configurados
+        for (int i = 0; i < numHumanos && i < 4; i++) {
+            Inventario inv = new Inventario();
+            inv.añadirOActualizar(new Dado("normal", 1, 1, 6), 3);
+            jugadores.add(new Pinguino("Jugador " + (i + 1), colores[i], 0, inv));
+        }
 
-        Inventario inv2 = new Inventario();
-        inv2.añadirOActualizar(new Dado("normal", 1, 1, 6), 3);
-        jugadores.add(new Pinguino("Jugador 2", "Rojo", 0, inv2));
+        // EL AÑADIDO: Añadir siempre a la IA Foca al final de la lista
+        Foca cpu = new Foca("IA Foca", "Gris", 0);
+        jugadores.add(cpu);
 
         this.partida.setJugadores(jugadores);
         this.partida.setJugadorActualIndice(0);
-        this.partida.setUltimoEvento("Nueva partida preparada.");
+        this.partida.setUltimoEvento("Partida preparada. Turno de " + jugadores.get(0).getNombre());
     }
 
-    public int tirarDado(Jugador j, Dado dadoOpcional) {
-        int resultado = dadoOpcional.tirar(random);
-        gestorJugador.jugadorSeMueve(j, resultado, this.partida.getTablero());
-        return resultado;
+    public void nuevaPartidaPersonalizada(ArrayList<Pinguino> humanos) {
+        this.partida = new Partida();
+        ArrayList<Jugador> jugadores = new ArrayList<Jugador>();
+        
+        jugadores.addAll(humanos);
+
+        Foca cpu = new Foca("IA Foca", "Gris", 0);
+        jugadores.add(cpu);
+
+        this.partida.setJugadores(jugadores);
+        this.partida.setJugadorActualIndice(0);
+        this.partida.setUltimoEvento("Partida personalizada preparada. Turno de " + jugadores.get(0).getNombre());
     }
 
-    public String jugarTurnoConDado(Dado dado) {
-        if (partida == null || partida.isFinalizada()) {
-            return "La partida no está disponible.";
-        }
+    /**
+     * Mantiene tu lógica original de tirarDado pero integrada.
+     */
+    public String jugarTurnoHumano(Dado dado) {
+        if (partida == null || partida.isFinalizada()) return "Partida no disponible.";
 
         Jugador actual = partida.getJugadorActual();
-        if (actual == null) {
-            return "No hay jugadores.";
-        }
-
+        
+        // Si el humano debe saltar turno
         if (actual.debeSaltarTurno()) {
             actual.consumirTurnoPerdido();
-            String mensaje = actual.getNombre() + " pierde este turno.";
-            partida.setUltimoEvento(mensaje);
+            String msj = actual.getNombre() + " pierde su turno.";
+            partida.setUltimoEvento(msj);
             siguienteTurno();
-            return mensaje;
+            return msj;
         }
 
-        int resultado = tirarDado(actual, dado);
+        // Tirada y movimiento (Lógica original)
+        int resultado = dado.tirar(random);
+        gestorJugador.jugadorSeMueve(actual, resultado, partida.getTablero());
         String mensaje = actual.getNombre() + " avanza " + resultado + " casillas.";
 
+        // Ejecutar efectos si es Pingüino
         if (actual instanceof Pinguino) {
             Casilla casilla = partida.getTablero().getCasilla(actual.getPosicion());
-            String mensajeCasilla = gestorTablero.ejecutarCasilla(partida, (Pinguino) actual, casilla);
-
-            if (mensajeCasilla != null && !mensajeCasilla.isEmpty()) {
-                mensaje = actual.getNombre() + " avanza " + resultado + " casillas. " + mensajeCasilla;
-            }
-
+            String msjCasilla = gestorTablero.ejecutarCasilla(partida, (Pinguino) actual, casilla);
+            if (msjCasilla != null) mensaje += " " + msjCasilla;
             comprobarChoquesJugadores();
         }
 
         partida.comprobarGanador();
-
         if (!partida.isFinalizada()) {
             siguienteTurno();
         }
+        
+        return mensaje;
+    }
+
+    /**
+     * El añadido para la lógica automática de la IA.
+     */
+    public String ejecutarTurnoIA() {
+        Jugador actual = partida.getJugadorActual();
+        if (!(actual instanceof Foca)) return null;
+
+        Foca f = (Foca) actual;
+        String mensaje;
+
+        if (f.getTurnosBloqueada() > 0) {
+            f.setTurnosBloqueada(f.getTurnosBloqueada() - 1);
+            mensaje = "La foca está distraída comiendo pescado.";
+        } else {
+            int posicionAnterior = f.getPosicion();
+            int pasos = random.nextInt(6) + 1;
+            gestorJugador.jugadorSeMueve(f, pasos, partida.getTablero());
+            int posicionNueva = f.getPosicion();
+            
+            // Comprobar si pasa por encima de algún pingüino (sin contar la casilla final donde hay choque)
+            for (Jugador j : partida.getJugadores()) {
+                if (j instanceof Pinguino) {
+                    if (j.getPosicion() > posicionAnterior && j.getPosicion() < posicionNueva) {
+                        f.aplastarJugador((Pinguino) j);
+                        partida.setUltimoEvento("La foca pasó por encima de " + j.getNombre() + " y perdió la mitad de su inventario.");
+                    }
+                }
+            }
+            
+            mensaje = "La foca (IA) se mueve " + pasos + " casillas.";
+        }
 
         partida.setUltimoEvento(mensaje);
+        siguienteTurno();
         return mensaje;
     }
 
@@ -90,49 +138,28 @@ public class GestorPartida {
             for (int j = i + 1; j < partida.getJugadores().size(); j++) {
                 Jugador j1 = partida.getJugadores().get(i);
                 Jugador j2 = partida.getJugadores().get(j);
-                if (j1.getPosicion() == j2.getPosicion() && j1 instanceof Pinguino && j2 instanceof Pinguino) {
-                    gestorJugador.pingüinoGuerra((Pinguino) j1, (Pinguino) j2);
-                    partida.setUltimoEvento("Dos jugadores han chocado y han librado una guerra de bolas de nieve.");
+                if (j1.getPosicion() == j2.getPosicion()) {
+                    if (j1 instanceof Pinguino && j2 instanceof Pinguino) {
+                        gestorJugador.pingüinoGuerra((Pinguino) j1, (Pinguino) j2);
+                    } else if (j1 instanceof Pinguino && j2 instanceof Foca) {
+                        gestorJugador.focaInteractua((Pinguino) j1, (Foca) j2, partida.getTablero());
+                    } else if (j1 instanceof Foca && j2 instanceof Pinguino) {
+                        gestorJugador.focaInteractua((Pinguino) j2, (Foca) j1, partida.getTablero());
+                    }
                 }
             }
         }
-    }
-
-    public void ejecutarTurnoCompleto() {
-        Jugador actual = partida.getJugadorActual();
-        if (actual instanceof Pinguino) {
-            Pinguino p = (Pinguino) actual;
-            Item item = p.getInv().buscarPorNombre("normal");
-            if (item instanceof Dado) {
-                jugarTurnoConDado((Dado) item);
-            }
-        }
-    }
-
-    public void procesarTurnoJugador(Jugador j) {
-        partida.setUltimoEvento("Turno de " + j.getNombre());
-    }
-
-    public void actualizarEstadoTablero() {
-        partida.getTablero().actualizarTablero();
     }
 
     public void siguienteTurno() {
         partida.siguienteTurno();
     }
 
-    public Partida getPartida() {
-        return this.partida;
-    }
-
-    public void guardarPartida() {
-        gestorBBDD.guardarBBDD(partida);
-    }
-
+    // Métodos de acceso y persistencia originales
+    public Partida getPartida() { return this.partida; }
+    public void guardarPartida() { gestorBBDD.guardarBBDD(partida); }
     public void cargarPartida(int id) {
         Partida cargada = gestorBBDD.cargarBBDD(id);
-        if (cargada != null) {
-            this.partida = cargada;
-        }
+        if (cargada != null) this.partida = cargada;
     }
 }
