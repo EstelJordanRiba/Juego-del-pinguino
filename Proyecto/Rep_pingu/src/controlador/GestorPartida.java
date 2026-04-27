@@ -114,6 +114,17 @@ public class GestorPartida {
             int pasos = random.nextInt(6) + 1;
             gestorJugador.jugadorSeMueve(f, pasos, partida.getTablero());
             int posicionNueva = f.getPosicion();
+            Casilla casillaDestino = partida.getTablero().getCasilla(posicionNueva);
+            if (casillaDestino instanceof Agujero) {
+                int destinoA = partida.getTablero().buscarAgujeroAnterior(posicionNueva);
+                f.setPosicion(destinoA);
+                mensaje = "La foca (IA) cae en un agujero y retrocede.";
+            } else if (casillaDestino instanceof Oso) {
+                f.setPosicion(0);
+                mensaje = "La foca (IA) se asusta del oso y huye al inicio.";
+            } else {
+                mensaje = "La foca (IA) se mueve " + pasos + " casillas.";
+            }
             
             // Comprobar si pasa por encima de algún pingüino (sin contar la casilla final donde hay choque)
             for (Jugador j : partida.getJugadores()) {
@@ -124,8 +135,6 @@ public class GestorPartida {
                     }
                 }
             }
-            
-            mensaje = "La foca (IA) se mueve " + pasos + " casillas.";
         }
 
         partida.setUltimoEvento(mensaje);

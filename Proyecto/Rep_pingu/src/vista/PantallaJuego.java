@@ -15,6 +15,13 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.paint.Color;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Tooltip;
+import javafx.scene.control.ButtonBar.ButtonData;
+import java.util.Optional;
 import java.util.ArrayList;
 
 import controlador.GestorPartida;
@@ -68,7 +75,16 @@ public class PantallaJuego {
         // Fallback en caso de arrancar directamente (se sobreescribirá si venimos del configurador)
         gestorPartida.nuevaPartida(4); 
         mostrarTiposDeCasillasEnTablero(gestorPartida.getPartida().getTablero());
+        configurarTooltips();
         refrescarPantalla();
+    }
+
+    private void configurarTooltips() {
+        Tooltip.install(dado, new Tooltip("Dado Normal: Avanza de 1 a 6 casillas."));
+        Tooltip.install(rapido, new Tooltip("Dado Rápido: Avanza de 5 a 10 casillas."));
+        Tooltip.install(lento, new Tooltip("Dado Lento: Avanza de 1 a 3 casillas."));
+        Tooltip.install(peces, new Tooltip("Pez: Evita que el Oso te devuelva al inicio."));
+        Tooltip.install(nieve, new Tooltip("Bola de Nieve: Pasa el turno rápido o minimiza pérdidas si te pisa la Foca."));
     }
 
     public void iniciarPartidaPersonalizada(ArrayList<Pinguino> jugadores) {
@@ -81,8 +97,18 @@ public class PantallaJuego {
         Partida p = gestorPartida.getPartida();
         eventos.setText(p.getUltimoEvento());
 
-        // Actualizar posiciones de todos los jugadores que existan
+        // Ocultar todas las fichas y quitarles el brillo primero
         Circle[] fichas = {P1, P2, P3, P4, P5};
+        for (Circle ficha : fichas) {
+            if (ficha != null) {
+                ficha.setVisible(false);
+                ficha.setEffect(null);
+            }
+        }
+
+        int jugadorActualIndex = p.getJugadorActualIndice();
+
+        // Actualizar posiciones de todos los jugadores que existan
         for (int i = 0; i < p.getJugadores().size(); i++) {
             if (i < fichas.length && fichas[i] != null) {
                 fichas[i].setVisible(true);
@@ -91,12 +117,21 @@ public class PantallaJuego {
                 String colorStr = p.getJugadores().get(i).getColor();
                 if (colorStr != null) {
                     switch (colorStr.toLowerCase()) {
-                        case "rojo": fichas[i].setFill(javafx.scene.paint.Color.RED); break;
-                        case "azul": fichas[i].setFill(javafx.scene.paint.Color.DODGERBLUE); break;
-                        case "verde": fichas[i].setFill(javafx.scene.paint.Color.LIMEGREEN); break;
-                        case "amarillo": fichas[i].setFill(javafx.scene.paint.Color.GOLD); break;
-                        case "gris": fichas[i].setFill(javafx.scene.paint.Color.DARKGRAY); break;
+                        case "rojo": fichas[i].setFill(Color.RED); break;
+                        case "azul": fichas[i].setFill(Color.DODGERBLUE); break;
+                        case "verde": fichas[i].setFill(Color.LIMEGREEN); break;
+                        case "amarillo": fichas[i].setFill(Color.GOLD); break;
+                        case "gris": fichas[i].setFill(Color.DARKGRAY); break;
                     }
+                }
+
+                // Añadir brillo al jugador cuyo turno esté activo
+                if (i == jugadorActualIndex) {
+                    DropShadow glow = new DropShadow();
+                    glow.setColor((Color) fichas[i].getFill());
+                    glow.setRadius(25);
+                    glow.setSpread(0.7);
+                    fichas[i].setEffect(glow);
                 }
             }
         }
@@ -125,24 +160,69 @@ public class PantallaJuego {
         }
     }
 
+    private void procesarTurnoPinguino(Pinguino p, Dado dado, String tipoDado) {
+        int origen = p.getPosicion();
+        String mensaje = gestorPartida.jugarTurnoHumano(dado);
+        
+        if (!tipoDado.equals("normal")) {
+            p.getInv().gastarItem(tipoDado, 1);
+        }
+        
+        if (mensaje.contains("OSO_ATAQUE")) {
+            manejarAtaqueOso(p);
+            dadoResultText.setText("¡Atacado por el oso!");
+        } else {
+            animarMovimiento(getFicha(p), origen, p.getPosicion());
+            dadoResultText.setText(mensaje);
+        }
+        
+        refrescarPantalla();
+        checkTurnoIA();
+    }
+
+    private void manejarAtaqueOso(Pinguino p) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("¡Ataque del Oso!");
+        alert.setHeaderText("¡Un oso salvaje ha aparecido en tu casilla!");
+        alert.setContentText("¿Qué deseas hacer?");
+        
+        if (imgOso != null) {
+            ImageView imageView = new ImageView(imgOso);
+            imageView.setFitHeight(100);
+            imageView.setFitWidth(100);
+            alert.setGraphic(imageView);
+        }
+        
+        ButtonType btnPez = new ButtonType("Lanzar Pez", ButtonData.OK_DONE);
+        ButtonType btnHuir = new ButtonType("Aceptar Destino (Huir)", ButtonData.CANCEL_CLOSE);
+        
+        if (p.getInv().getCantidad("pez") > 0) {
+            alert.getButtonTypes().setAll(btnPez, btnHuir);
+        } else {
+            alert.setContentText("No tienes peces. ¡El oso te atrapa!");
+            alert.getButtonTypes().setAll(btnHuir);
+        }
+        
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == btnPez) {
+            p.getInv().gastarItem("pez", 1);
+            gestorPartida.getPartida().setUltimoEvento(p.getNombre() + " usó un pez para escapar del oso.");
+        } else {
+            p.setPosicion(0);
+            gestorPartida.getPartida().setUltimoEvento(p.getNombre() + " fue atrapado por el oso y vuelve al inicio.");
+        }
+    }
+
     @FXML
     private void handleDado(ActionEvent event) {
         Jugador actual = gestorPartida.getPartida().getJugadorActual();
         if (!(actual instanceof Pinguino)) return;
 
-        int origen = actual.getPosicion();
         Pinguino p = (Pinguino) actual;
         Item item = p.getInv().buscarPorNombre("normal");
 
         if (item instanceof Dado) {
-            // 1. Turno del Humano
-            String mensaje = gestorPartida.jugarTurnoHumano((Dado) item);
-            animarMovimiento(getFicha(actual), origen, actual.getPosicion());
-            dadoResultText.setText(mensaje);
-            refrescarPantalla();
-
-            // 2. TURNO DE LA IA (Si después del humano le toca a la foca)
-            checkTurnoIA();
+            procesarTurnoPinguino(p, (Dado) item, "normal");
         }
     }
 
@@ -151,17 +231,11 @@ public class PantallaJuego {
         Jugador actual = gestorPartida.getPartida().getJugadorActual();
         if (!(actual instanceof Pinguino)) return;
 
-        int origen = actual.getPosicion();
         Pinguino p = (Pinguino) actual;
         Item item = p.getInv().buscarPorNombre("rapido");
 
         if (item instanceof Dado && item.getCantidad() > 0) {
-            String mensaje = gestorPartida.jugarTurnoHumano((Dado) item);
-            p.getInv().gastarItem("rapido", 1);
-            animarMovimiento(getFicha(actual), origen, actual.getPosicion());
-            dadoResultText.setText(mensaje);
-            refrescarPantalla();
-            checkTurnoIA();
+            procesarTurnoPinguino(p, (Dado) item, "rapido");
         } else {
             eventos.setText("No tienes dados rápidos.");
         }
@@ -172,17 +246,11 @@ public class PantallaJuego {
         Jugador actual = gestorPartida.getPartida().getJugadorActual();
         if (!(actual instanceof Pinguino)) return;
 
-        int origen = actual.getPosicion();
         Pinguino p = (Pinguino) actual;
         Item item = p.getInv().buscarPorNombre("lento");
 
         if (item instanceof Dado && item.getCantidad() > 0) {
-            String mensaje = gestorPartida.jugarTurnoHumano((Dado) item);
-            p.getInv().gastarItem("lento", 1);
-            animarMovimiento(getFicha(actual), origen, actual.getPosicion());
-            dadoResultText.setText(mensaje);
-            refrescarPantalla();
-            checkTurnoIA();
+            procesarTurnoPinguino(p, (Dado) item, "lento");
         } else {
             eventos.setText("No tienes dados lentos.");
         }
@@ -333,14 +401,19 @@ public class PantallaJuego {
 
             if (c instanceof Oso) {
                 iv.setImage(imgOso);
+                Tooltip.install(pane, new Tooltip("Oso: Te ataca y vuelves a la salida a menos que uses un pez."));
             } else if (c instanceof Agujero) {
                 iv.setImage(imgAgujero);
+                Tooltip.install(pane, new Tooltip("Agujero: Caes y retrocedes hasta el agujero anterior."));
             } else if (c instanceof Trineo) {
                 iv.setImage(imgTrineo);
+                Tooltip.install(pane, new Tooltip("Trineo: Te deslizas hacia adelante hasta el siguiente trineo."));
             } else if (c instanceof Evento) {
                 iv.setImage(imgEvento);
+                Tooltip.install(pane, new Tooltip("Casilla Evento: Te da objetos (peces, dados) o te quita el turno."));
             } else if (c instanceof SueloQuebradizo) {
                 iv.setImage(imgQuebradizo);
+                Tooltip.install(pane, new Tooltip("Suelo Quebradizo: Al pisarlo 2 veces se rompe y te caes al agujero."));
             } else {
                 iv.setImage(imgNormal);
             }
