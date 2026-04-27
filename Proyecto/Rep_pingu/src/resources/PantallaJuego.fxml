@@ -88,6 +88,10 @@
                     <Circle fx:id="P4" id="P4" radius="14.0" styleClass="player">
                         <GridPane.margin><Insets left="102.0" /></GridPane.margin>
                     </Circle>
+                    <!-- Foca -->
+                    <Circle fx:id="P5" id="P5" radius="14.0" styleClass="player">
+                        <GridPane.margin><Insets left="136.0" /></GridPane.margin>
+                    </Circle>
                 </children>
             </GridPane>
         </StackPane>

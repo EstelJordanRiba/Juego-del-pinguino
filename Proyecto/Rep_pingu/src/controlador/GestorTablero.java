@@ -8,12 +8,7 @@ public class GestorTablero {
         String mensaje = "";
 
         if (casilla instanceof Oso) {
-            if (jugador.getInv().gastarItem("pez", 1)) {
-                mensaje = jugador.getNombre() + " usa un pez para evitar al oso.";
-            } else {
-                jugador.setPosicion(0);
-                mensaje = jugador.getNombre() + " ha sido atrapado por el oso y vuelve al inicio.";
-            }
+            mensaje = "OSO_ATAQUE";
 
         } else if (casilla instanceof Agujero) {
             int destino = partida.getTablero().buscarAgujeroAnterior(jugador.getPosicion());
