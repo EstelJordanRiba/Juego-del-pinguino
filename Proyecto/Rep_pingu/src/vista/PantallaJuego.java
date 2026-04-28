@@ -176,6 +176,8 @@ public class PantallaJuego {
             dadoResultText.setText(mensaje);
         }
         
+        mostrarAlertasEventos(mensaje);
+        
         refrescarPantalla();
         checkTurnoIA();
     }
@@ -295,7 +297,32 @@ public class PantallaJuego {
             // Animamos la ficha de la foca (P5)
             animarMovimiento(P5, origenFoca, siguiente.getPosicion());
             eventos.setText(msjIA);
+            
+            mostrarAlertasEventos(msjIA);
+            
             refrescarPantalla();
+        }
+    }
+
+    private void mostrarAlertasEventos(String mensaje) {
+        if (mensaje == null) return;
+        
+        if (mensaje.contains("GUERRA_NIEVE") || mensaje.contains("FOCA_INTERACTUA")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("¡Evento Especial en la Casilla!");
+            alert.setHeaderText("¡Choque de jugadores!");
+            
+            // Extraer la parte relevante del mensaje para mostrarla
+            StringBuilder contenido = new StringBuilder();
+            String[] partes = mensaje.split("\\|");
+            for (String parte : partes) {
+                if (parte.contains("GUERRA_NIEVE") || parte.contains("FOCA_INTERACTUA")) {
+                    contenido.append(parte.trim()).append("\n\n");
+                }
+            }
+            
+            alert.setContentText(contenido.toString().trim());
+            alert.showAndWait();
         }
     }
 

@@ -17,18 +17,26 @@ public class Pinguino extends Jugador {
         this.inv = inv;
     }
 
-    public void gestionarBatalla(Pinguino rival) {
+    public String gestionarBatalla(Pinguino rival) {
         int bolasPropias = inv.getCantidad("bola");
         int bolasRival = rival.getInv().getCantidad("bola");
 
         inv.gastarItem("bola", bolasPropias);
         rival.getInv().gastarItem("bola", bolasRival);
 
+        String msj = "GUERRA_NIEVE: " + this.getNombre() + " (" + bolasPropias + " bolas) vs " + 
+                     rival.getNombre() + " (" + bolasRival + " bolas). ";
+
         if (bolasPropias > bolasRival) {
             rival.moverPosicion(-(bolasPropias - bolasRival));
+            msj += rival.getNombre() + " retrocede " + (bolasPropias - bolasRival) + " casillas.";
         } else if (bolasRival > bolasPropias) {
             this.moverPosicion(-(bolasRival - bolasPropias));
+            msj += this.getNombre() + " retrocede " + (bolasRival - bolasPropias) + " casillas.";
+        } else {
+            msj += "¡Empate! Nadie retrocede.";
         }
+        return msj;
     }
 
     public boolean usarItem(Item i) {

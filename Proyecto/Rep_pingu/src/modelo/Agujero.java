@@ -10,7 +10,7 @@ public class Agujero extends Casilla {
    
     @Override
     public void realizarAccion(Jugador jugador) {
-        // codi
+        
     }
     	}
 

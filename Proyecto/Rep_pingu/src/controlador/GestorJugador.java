@@ -61,17 +61,19 @@ public class GestorJugador {
         }
     }
 
-    public void pingüinoGuerra(Pinguino p1, Pinguino p2) {
-        p1.gestionarBatalla(p2);
+    public String pingüinoGuerra(Pinguino p1, Pinguino p2) {
+        return p1.gestionarBatalla(p2);
     }
 
-    public void focaInteractua(Pinguino p, Foca f, Tablero t) {
+    public String focaInteractua(Pinguino p, Foca f, Tablero t) {
         if (p.getInv().gastarItem("pez", 1)) {
             f.setTurnosBloqueada(2);
             f.setSoborno(true);
+            return "FOCA_INTERACTUA: " + p.getNombre() + " sobornó a la foca con un pez.";
         } else {
             int agujeroAnterior = t.buscarAgujeroAnterior(p.getPosicion());
             p.setPosicion(agujeroAnterior);
+            return "FOCA_INTERACTUA: ¡La foca empujó a " + p.getNombre() + " a un agujero!";
         }
     }
 }

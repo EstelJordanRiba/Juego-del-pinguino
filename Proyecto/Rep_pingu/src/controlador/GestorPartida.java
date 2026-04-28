@@ -85,7 +85,10 @@ public class GestorPartida {
             Casilla casilla = partida.getTablero().getCasilla(actual.getPosicion());
             String msjCasilla = gestorTablero.ejecutarCasilla(partida, (Pinguino) actual, casilla);
             if (msjCasilla != null) mensaje += " " + msjCasilla;
-            comprobarChoquesJugadores();
+            String choques = comprobarChoquesJugadores();
+            if (!choques.isEmpty()) {
+                mensaje += " | " + choques;
+            }
         }
 
         partida.comprobarGanador();
@@ -135,6 +138,11 @@ public class GestorPartida {
                     }
                 }
             }
+            
+            String choques = comprobarChoquesJugadores();
+            if (!choques.isEmpty()) {
+                mensaje += " | " + choques;
+            }
         }
 
         partida.setUltimoEvento(mensaje);
@@ -142,22 +150,24 @@ public class GestorPartida {
         return mensaje;
     }
 
-    private void comprobarChoquesJugadores() {
+    private String comprobarChoquesJugadores() {
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < partida.getJugadores().size(); i++) {
             for (int j = i + 1; j < partida.getJugadores().size(); j++) {
                 Jugador j1 = partida.getJugadores().get(i);
                 Jugador j2 = partida.getJugadores().get(j);
-                if (j1.getPosicion() == j2.getPosicion()) {
+                if (j1.getPosicion() > 0 && j1.getPosicion() == j2.getPosicion()) {
                     if (j1 instanceof Pinguino && j2 instanceof Pinguino) {
-                        gestorJugador.pingüinoGuerra((Pinguino) j1, (Pinguino) j2);
+                        sb.append(gestorJugador.pingüinoGuerra((Pinguino) j1, (Pinguino) j2)).append(" ");
                     } else if (j1 instanceof Pinguino && j2 instanceof Foca) {
-                        gestorJugador.focaInteractua((Pinguino) j1, (Foca) j2, partida.getTablero());
+                        sb.append(gestorJugador.focaInteractua((Pinguino) j1, (Foca) j2, partida.getTablero())).append(" ");
                     } else if (j1 instanceof Foca && j2 instanceof Pinguino) {
-                        gestorJugador.focaInteractua((Pinguino) j2, (Foca) j1, partida.getTablero());
+                        sb.append(gestorJugador.focaInteractua((Pinguino) j2, (Foca) j1, partida.getTablero())).append(" ");
                     }
                 }
             }
         }
+        return sb.toString().trim();
     }
 
     public void siguienteTurno() {

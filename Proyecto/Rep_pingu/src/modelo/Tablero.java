@@ -25,27 +25,28 @@ public class Tablero {
 
         Random rand = new Random();
         for (int i = 1; i < 49; i++) {
-            int tipo = rand.nextInt(6);
+            int tipo = rand.nextInt(10);
             Casilla c;
-            switch (tipo) {
-                case 0:
-                    c = new Normal(i);
-                    break;
-                case 1:
-                    c = new Oso(i);
-                    break;
-                case 2:
-                    c = new Trineo(i);
-                    break;
-                case 3:
-                    c = new Agujero(i);
-                    break;
-                case 4:
-                    c = new Evento(i);
-                    break;
-                default:
-                    c = new SueloQuebradizo(i);
-                    break;
+            if (tipo < 5) {
+                c = new Normal(i);
+            } else {
+                switch (tipo) {
+                    case 5:
+                        c = new Oso(i);
+                        break;
+                    case 6:
+                        c = new Trineo(i);
+                        break;
+                    case 7:
+                        c = new Agujero(i);
+                        break;
+                    case 8:
+                        c = new Evento(i);
+                        break;
+                    default:
+                        c = new SueloQuebradizo(i);
+                        break;
+                }
             }
             casillas.add(c);
         }
