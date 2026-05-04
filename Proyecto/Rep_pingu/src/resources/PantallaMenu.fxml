@@ -57,25 +57,12 @@
 
                 <Region prefHeight="8"/>
 
-                <!-- Formulario -->
-                <VBox spacing="10">
-                    <Label text="Usuario" styleClass="field-label"/>
-                    <TextField fx:id="userField" promptText="Usuario..." styleClass="field"/>
-
-                    <Label text="Contraseña" styleClass="field-label"/>
-                    <PasswordField fx:id="passField" promptText="Contraseña..." styleClass="field"/>
+                <!-- Menú Principal -->
+                <VBox spacing="15" alignment="CENTER">
+                    <Button fx:id="btnJugar" text="Jugar (Partida Rápida)" onAction="#handleJugar" maxWidth="Infinity" styleClass="primary" style="-fx-font-size: 18px; -fx-padding: 10 20;"/>
+                    <Button fx:id="btnPersonalizar" text="Personalizar Partida" onAction="#handlePersonalizar" maxWidth="Infinity" style="-fx-font-size: 18px; -fx-padding: 10 20;"/>
+                    <Button fx:id="btnCargar" text="Cargar Partida Guardada" onAction="#handleCargar" maxWidth="Infinity" style="-fx-font-size: 18px; -fx-padding: 10 20;"/>
                 </VBox>
-
-                <Region prefHeight="6"/>
-
-                <!-- Botonera -->
-                <HBox spacing="10">
-                    <Button fx:id="loginButton" text="Login" onAction="#handleLogin" maxWidth="Infinity" styleClass="primary"/>
-                    <Button fx:id="registerButton" text="Registro" onAction="#handleRegister" maxWidth="Infinity"/>
-                </HBox>
-
-                <Label text="Tip: para la demo, puedes entrar con cualquier usuario si aún no hay validación."
-                       styleClass="hint" wrapText="true"/>
             </VBox>
         </StackPane>
     </center>

@@ -93,6 +93,19 @@ public class PantallaJuego {
         refrescarPantalla();
     }
 
+    public void cargarPartidaExistente() {
+        if (gestorPartida != null) {
+            gestorPartida.cargarPartida(1);
+            if (gestorPartida.getPartida() != null && gestorPartida.getPartida().getTablero() != null) {
+                mostrarTiposDeCasillasEnTablero(gestorPartida.getPartida().getTablero());
+                refrescarPantalla();
+                eventos.setText("Partida cargada desde la BD con éxito.");
+            } else {
+                eventos.setText("No se pudo cargar la partida o la BD está vacía.");
+            }
+        }
+    }
+
     private void refrescarPantalla() {
         Partida p = gestorPartida.getPartida();
         eventos.setText(p.getUltimoEvento());
