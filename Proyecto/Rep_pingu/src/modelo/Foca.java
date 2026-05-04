@@ -49,10 +49,6 @@ public class Foca extends Jugador {
         p.getInv().eliminarVacios();
     }
 
-    public void golpearJugador(Pinguino p) {
-        p.setPosicion(0);
-    }
-
     public boolean esSobornado() {
         return soborno;
     }

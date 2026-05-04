@@ -53,12 +53,12 @@ public class PantallaMenu {
         String password = passField.getText();
         if (!username.isEmpty() && !password.isEmpty()) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/PantallaJuego.fxml"));
-                Parent pantallaJuegoRoot = loader.load();
-                Scene pantallaJuegoScene = new Scene(pantallaJuegoRoot);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/PantallaConfiguracion.fxml"));
+                Parent pantallaConfigRoot = loader.load();
+                Scene pantallaConfigScene = new Scene(pantallaConfigRoot);
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                stage.setScene(pantallaJuegoScene);
-                stage.setTitle("El joc d'en Pingu");
+                stage.setScene(pantallaConfigScene);
+                stage.setTitle("Configuración de Partida");
             } catch (Exception e) {
                 e.printStackTrace();
             }

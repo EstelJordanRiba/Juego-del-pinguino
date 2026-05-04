@@ -65,12 +65,13 @@ public class GestorJugador {
         p1.gestionarBatalla(p2);
     }
 
-    public void focaInteractua(Pinguino p, Foca f) {
+    public void focaInteractua(Pinguino p, Foca f, Tablero t) {
         if (p.getInv().gastarItem("pez", 1)) {
             f.setTurnosBloqueada(2);
             f.setSoborno(true);
         } else {
-            f.golpearJugador(p);
+            int agujeroAnterior = t.buscarAgujeroAnterior(p.getPosicion());
+            p.setPosicion(agujeroAnterior);
         }
     }
 }
