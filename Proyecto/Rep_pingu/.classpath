@@ -7,7 +7,47 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javafx">
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/javafx">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/Proyecto/Rep_pingu/fx/javafx.base.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/Proyecto/Rep_pingu/fx/javafx.controls.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/Proyecto/Rep_pingu/fx/javafx.fxml.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/Proyecto/Rep_pingu/fx/javafx.graphics.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/Proyecto/Rep_pingu/fx/javafx.media.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/Proyecto/Rep_pingu/fx/javafx.swing.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/Proyecto/Rep_pingu/fx/javafx.web.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/puiggrostorrelles20/Desktop/JUEGO DEL PINGUINO/Juego-del-pinguino/Proyecto/Rep_pingu/fx/javafx-swt.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
