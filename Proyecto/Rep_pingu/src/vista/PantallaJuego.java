@@ -1,6 +1,8 @@
 package vista;
 
 import javafx.animation.TranslateTransition;
+import javafx.scene.control.TextArea;
+import controlador.GestorBBDD;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +30,11 @@ import controlador.GestorPartida;
 import modelo.*;
 
 public class PantallaJuego {
+	
+	@FXML private TextArea estadistiquesText;
+
+	private GestorBBDD gestorBBDDStats = new GestorBBDD();
+	
     @FXML private MenuItem newGame, saveGame, loadGame, quitGame;
     @FXML private Button dado, rapido, lento, peces, nieve;
     @FXML private Text dadoResultText, rapido_t, lento_t, peces_t, nieve_t, eventos;
@@ -46,10 +53,29 @@ public class PantallaJuego {
     @FXML
     private void handleSaveGame(ActionEvent event) {
         if (gestorPartida != null && gestorPartida.getPartida() != null) {
-            gestorPartida.guardarPartida();
-            eventos.setText("Partida guardada correctamente en la BD.");
+            ArrayList<Integer> idsJugadors = new ArrayList<>();
+
+            for (Jugador j : gestorPartida.getPartida().getJugadores()) {
+                if (j instanceof Pinguino) {
+                    int id = gestorBBDDStats.obtenirOCrearJugadorAutomatic(j.getNombre());
+                    if (id != -1) {
+                        idsJugadors.add(id);
+                    }
+                }
+            }
+
+            int idPartida = gestorPartida.getPartida().isFinalizada()
+                    ? gestorPartida.guardarPartidaRetornantId(idsJugadors)
+                    : gestorPartida.guardarPartidaRetornantId(idsJugadors);
+
+            if (idPartida != -1) {
+                eventos.setText("Partida guardada correctament a la BD. ID: " + idPartida);
+            } else {
+                eventos.setText("Error guardant la partida a la BD.");
+            }
         }
     }
+
 
     @FXML
     private void handleLoadGame(ActionEvent event) {
@@ -477,8 +503,65 @@ public class PantallaJuego {
                 circles.add(node);
             }
         }
+
         for (javafx.scene.Node node : circles) {
             node.toFront();
         }
+    }
+
+    @FXML
+    private void handleRecordPLSQL(ActionEvent event) {
+        int record = gestorBBDDStats.obtenirRecordGuanyadesPLSQL();
+        estadistiquesText.setText("🏆 Rècord de partides guanyades:\n\n" + record + " victòries");
+    }
+
+    @FXML
+    private void handleJugadorsRecordPLSQL(ActionEvent event) {
+        ArrayList<String> llista = gestorBBDDStats.obtenirJugadorsRecordPLSQL();
+        mostrarEstadistiques("👑 Jugadors amb el rècord", llista);
+    }
+
+    @FXML
+    private void handleMitjanaPLSQL(ActionEvent event) {
+        double mitjana = gestorBBDDStats.obtenirMitjanaGuanyadesPLSQL();
+        estadistiquesText.setText("📊 Mitjana de partides guanyades:\n\n" + mitjana);
+    }
+
+    @FXML
+    private void handleSobreMitjanaPLSQL(ActionEvent event) {
+        ArrayList<String> llista = gestorBBDDStats.obtenirJugadorsSobreMitjanaPLSQL();
+        mostrarEstadistiques("📈 Jugadors per sobre de la mitjana", llista);
+    }
+
+    @FXML
+    private void handleRankingPLSQL(ActionEvent event) {
+        ArrayList<String> ranking = gestorBBDDStats.obtenirRankingPLSQL();
+        mostrarEstadistiques("🏅 Ranking de jugadors", ranking);
+    }
+
+    @FXML
+    private void handlePosicioPLSQL(ActionEvent event) {
+        Jugador actual = gestorPartida.getPartida().getJugadorActual();
+
+        if (!(actual instanceof Pinguino)) {
+            estadistiquesText.setText("Ara és el torn de la IA. Espera al torn d’un jugador.");
+            return;
+        }
+
+        int id = gestorBBDDStats.obtenirOCrearJugadorAutomatic(actual.getNombre());
+        String resultat = gestorBBDDStats.obtenirPosicioJugadorPLSQL(id);
+
+        estadistiquesText.setText("📍 Posició del jugador actual:\n\n" + actual.getNombre() + "\n" + resultat);
+    }
+
+    private void mostrarEstadistiques(String titol, ArrayList<String> dades) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(titol).append("\n\n");
+
+        for (String linia : dades) {
+            sb.append(linia).append("\n");
+        }
+
+        estadistiquesText.setText(sb.toString());
     }
 }

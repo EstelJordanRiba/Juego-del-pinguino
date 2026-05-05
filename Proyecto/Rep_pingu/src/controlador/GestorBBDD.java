@@ -103,7 +103,7 @@ public class GestorBBDD {
         try {
             con.setAutoCommit(false);
 
-            int idPartida = crearPartida(con, p);
+            int idPartida = crearPartida(con, p, idsJugadors);
             guardarTaulell(con, p, idPartida);
             guardarParticipacions(con, p, idPartida, idsJugadors);
 
@@ -125,7 +125,7 @@ public class GestorBBDD {
         }
     }
 
-    private int crearPartida(Connection con, Partida p) throws SQLException {
+    private int crearPartida(Connection con, Partida p, ArrayList<Integer> idsJugadors) throws SQLException {
         PreparedStatement psSeq = con.prepareStatement(
             "SELECT seq_partida.NEXTVAL FROM DUAL"
         );
@@ -135,17 +135,46 @@ public class GestorBBDD {
 
         int id = rs.getInt(1);
 
+        Integer guanyadorId = obtenirIdGuanyador(p, idsJugadors);
+
         PreparedStatement ps = con.prepareStatement(
-            "INSERT INTO Partides (partida_id, data_inici, hora_inici, estat) " +
-            "VALUES (?, SYSDATE, TO_CHAR(SYSDATE,'HH24:MI:SS'), ?)"
+            "INSERT INTO Partides (partida_id, data_inici, hora_inici, estat, guanyador_id) " +
+            "VALUES (?, SYSDATE, TO_CHAR(SYSDATE,'HH24:MI:SS'), ?, ?)"
         );
 
         ps.setInt(1, id);
         ps.setString(2, p.isFinalizada() ? "Finalitzada" : "En curs");
 
+        if (guanyadorId != null) {
+            ps.setInt(3, guanyadorId);
+        } else {
+            ps.setNull(3, Types.INTEGER);
+        }
+
         ps.executeUpdate();
 
         return id;
+    }
+
+    private Integer obtenirIdGuanyador(Partida p, ArrayList<Integer> idsJugadors) {
+        if (p == null || !p.isFinalizada() || p.getGanador() == null || idsJugadors == null) {
+            return null;
+        }
+
+        int indexPinguino = 0;
+
+        for (Jugador j : p.getJugadores()) {
+            if (j instanceof Pinguino) {
+                if (j == p.getGanador()) {
+                    if (indexPinguino < idsJugadors.size()) {
+                        return idsJugadors.get(indexPinguino);
+                    }
+                }
+                indexPinguino++;
+            }
+        }
+
+        return null;
     }
 
     private void guardarTaulell(Connection con, Partida p, int idPartida) throws SQLException {
@@ -231,13 +260,7 @@ public class GestorBBDD {
             int i = 0;
 
             while (rsJug.next()) {
-                String nickname;
-
-                try {
-                    nickname = Encriptador.desencriptar(rsJug.getString("nickname"));
-                } catch (Exception e) {
-                    nickname = rsJug.getString("nickname");
-                }
+                String nickname = desencriptarSeguro(rsJug.getString("nickname"));
 
                 Inventario inv = new Inventario();
 
@@ -279,14 +302,7 @@ public class GestorBBDD {
             ResultSet rsTab = psTab.executeQuery();
 
             while (rsTab.next()) {
-                String tipus;
-
-                try {
-                    tipus = Encriptador.desencriptar(rsTab.getString("tipus"));
-                } catch (Exception e) {
-                    tipus = rsTab.getString("tipus");
-                }
-
+                String tipus = desencriptarSeguro(rsTab.getString("tipus"));
                 caselles.add(crearCasilla(tipus, rsTab.getInt("casella_id") - 1));
             }
 
@@ -354,13 +370,7 @@ public class GestorBBDD {
             int pos = 1;
 
             while (rs.next()) {
-                String nick;
-
-                try {
-                    nick = Encriptador.desencriptar(rs.getString("nickname"));
-                } catch (Exception e) {
-                    nick = rs.getString("nickname");
-                }
+                String nick = desencriptarSeguro(rs.getString("nickname"));
 
                 ranking.add(pos + ".  " + nick + "  —  " +
                             rs.getInt("partides_jugades") + " partides");
@@ -389,12 +399,249 @@ public class GestorBBDD {
 
             ps.setInt(1, idPartida);
             ps.executeUpdate();
-            con.commit();
 
         } catch (SQLException e) {
             System.out.println("❌ Error finalitzant: " + e.getMessage());
         } finally {
             cerrar(con);
+        }
+    }
+
+    // ─────────────────────────────────────────
+    // PL/SQL - FUNCIONS I PROCEDIMENTS
+    // ─────────────────────────────────────────
+
+    public int obtenirRecordGuanyadesPLSQL() {
+        Connection con = conectarBaseDatos();
+        if (con == null) return 0;
+
+        try {
+            CallableStatement cs = con.prepareCall("{ ? = call fn_record_guanyades() }");
+            cs.registerOutParameter(1, Types.INTEGER);
+            cs.execute();
+            return cs.getInt(1);
+
+        } catch (SQLException e) {
+            System.out.println("❌ Error record PL/SQL: " + e.getMessage());
+            return 0;
+        } finally {
+            cerrar(con);
+        }
+    }
+
+    public double obtenirMitjanaGuanyadesPLSQL() {
+        Connection con = conectarBaseDatos();
+        if (con == null) return 0;
+
+        try {
+            CallableStatement cs = con.prepareCall("{ ? = call fn_mitjana_guanyades() }");
+            cs.registerOutParameter(1, Types.DOUBLE);
+            cs.execute();
+            return cs.getDouble(1);
+
+        } catch (SQLException e) {
+            System.out.println("❌ Error mitjana PL/SQL: " + e.getMessage());
+            return 0;
+        } finally {
+            cerrar(con);
+        }
+    }
+
+    public double obtenirPercentatgeMenysGuanyadesPLSQL(int guanyades) {
+        Connection con = conectarBaseDatos();
+        if (con == null) return 0;
+
+        try {
+            CallableStatement cs = con.prepareCall("{ ? = call fn_percentatge_menys_guanyades(?) }");
+            cs.registerOutParameter(1, Types.DOUBLE);
+            cs.setInt(2, guanyades);
+            cs.execute();
+            return cs.getDouble(1);
+
+        } catch (SQLException e) {
+            System.out.println("❌ Error percentatge PL/SQL: " + e.getMessage());
+            return 0;
+        } finally {
+            cerrar(con);
+        }
+    }
+
+    public ArrayList<String> obtenirJugadorsRecordPLSQL() {
+        ArrayList<String> resultat = new ArrayList<>();
+        Connection con = conectarBaseDatos();
+
+        if (con == null) return resultat;
+
+        try {
+            int record = obtenirRecordGuanyadesPLSQL();
+
+            CallableStatement cs = con.prepareCall("{ call pr_jugadors_record(?, ?) }");
+            cs.setInt(1, record);
+            cs.registerOutParameter(2, Types.REF_CURSOR);
+            cs.execute();
+
+            ResultSet rs = (ResultSet) cs.getObject(2);
+
+            while (rs.next()) {
+                String nick = desencriptarSeguro(rs.getString("nickname"));
+                int guanyades = rs.getInt("partides_guanyades");
+                resultat.add(nick + " — " + guanyades + " victòries");
+            }
+
+        } catch (SQLException e) {
+            resultat.add("Error: " + e.getMessage());
+        } finally {
+            cerrar(con);
+        }
+
+        return resultat;
+    }
+
+    public ArrayList<String> obtenirJugadorsSobreMitjanaPLSQL() {
+        ArrayList<String> resultat = new ArrayList<>();
+        Connection con = conectarBaseDatos();
+
+        if (con == null) return resultat;
+
+        try {
+            CallableStatement cs = con.prepareCall("{ call pr_jugadors_sobre_mitjana(?) }");
+            cs.registerOutParameter(1, Types.REF_CURSOR);
+            cs.execute();
+
+            ResultSet rs = (ResultSet) cs.getObject(1);
+
+            while (rs.next()) {
+                String nick = desencriptarSeguro(rs.getString("nickname"));
+                int guanyades = rs.getInt("partides_guanyades");
+                resultat.add(nick + " — " + guanyades + " victòries");
+            }
+
+            if (resultat.isEmpty()) {
+                resultat.add("Encara no hi ha jugadors per sobre de la mitjana.");
+            }
+
+        } catch (SQLException e) {
+            resultat.add("Error: " + e.getMessage());
+        } finally {
+            cerrar(con);
+        }
+
+        return resultat;
+    }
+
+    public ArrayList<String> obtenirRankingPLSQL() {
+        ArrayList<String> resultat = new ArrayList<>();
+        Connection con = conectarBaseDatos();
+
+        if (con == null) return resultat;
+
+        try {
+            CallableStatement cs = con.prepareCall("{ call pr_ranking_jugadors(?) }");
+            cs.registerOutParameter(1, Types.REF_CURSOR);
+            cs.execute();
+
+            ResultSet rs = (ResultSet) cs.getObject(1);
+
+            int pos = 1;
+
+            while (rs.next()) {
+                String nick = desencriptarSeguro(rs.getString("nickname"));
+                int jugades = rs.getInt("partides_jugades");
+                int guanyades = rs.getInt("partides_guanyades");
+
+                resultat.add(pos + ". " + nick + " — " + jugades + " jugades / " + guanyades + " guanyades");
+                pos++;
+            }
+
+            if (resultat.isEmpty()) {
+                resultat.add("Encara no hi ha ranking disponible.");
+            }
+
+        } catch (SQLException e) {
+            resultat.add("Error: " + e.getMessage());
+        } finally {
+            cerrar(con);
+        }
+
+        return resultat;
+    }
+
+    public String obtenirPosicioJugadorPLSQL(int jugadorId) {
+        Connection con = conectarBaseDatos();
+
+        if (con == null) return "No hi ha connexió amb la base de dades.";
+
+        try {
+            CallableStatement cs = con.prepareCall("{ call pr_posicio_jugador(?, ?) }");
+            cs.setInt(1, jugadorId);
+            cs.registerOutParameter(2, Types.INTEGER);
+            cs.execute();
+
+            int posicio = cs.getInt(2);
+            return "La teva posició al ranking és: " + posicio;
+
+        } catch (SQLException e) {
+            return "Error controlat: " + e.getMessage();
+        } finally {
+            cerrar(con);
+        }
+    }
+    public int obtenirOCrearJugadorAutomatic(String nickname) {
+        Connection con = conectarBaseDatos();
+        if (con == null) return -1;
+
+        try {
+            String nickEncriptat = Encriptador.encriptar(nickname);
+
+            PreparedStatement psCheck = con.prepareStatement(
+                "SELECT jugador_id FROM Jugadors WHERE nickname = ?"
+            );
+            psCheck.setString(1, nickEncriptat);
+
+            ResultSet rs = psCheck.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("jugador_id");
+            }
+
+            PreparedStatement psSeq = con.prepareStatement(
+                "SELECT seq_jugador.NEXTVAL FROM DUAL"
+            );
+
+            ResultSet rsSeq = psSeq.executeQuery();
+            rsSeq.next();
+
+            int id = rsSeq.getInt(1);
+
+            PreparedStatement psIns = con.prepareStatement(
+                "INSERT INTO Jugadors (jugador_id, nickname, contrasenya) VALUES (?, ?, ?)"
+            );
+
+            psIns.setInt(1, id);
+            psIns.setString(2, nickEncriptat);
+            psIns.setString(3, Encriptador.encriptar("1234"));
+
+            psIns.executeUpdate();
+
+            return id;
+
+        } catch (SQLException e) {
+            System.out.println("❌ Error obtenint/creant jugador automàtic: " + e.getMessage());
+            return -1;
+        } finally {
+            cerrar(con);
+        }
+    }
+    
+    // ─────────────────────────────────────────
+    // AUXILIARS
+    // ─────────────────────────────────────────
+
+    private String desencriptarSeguro(String text) {
+        try {
+            return Encriptador.desencriptar(text);
+        } catch (Exception e) {
+            return text;
         }
     }
 

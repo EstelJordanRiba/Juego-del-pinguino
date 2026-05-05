@@ -166,6 +166,10 @@ public class GestorPartida {
     public void siguienteTurno() {
         partida.siguienteTurno();
     }
+    
+    public int guardarPartidaRetornantId(ArrayList<Integer> idsJugadors) {
+        return gestorBBDD.guardarBBDD(partida, idsJugadors);
+    }
 
     public Partida getPartida() {
         return this.partida;
