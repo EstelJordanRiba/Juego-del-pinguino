@@ -1,4 +1,4 @@
-package modelo; // Pertenece al paquete "modelo"
+package controlador; // Pertenece al paquete "modelo"
 
 // Importaciones necesarias para trabajar con cifrado AES
 import javax.crypto.Cipher;

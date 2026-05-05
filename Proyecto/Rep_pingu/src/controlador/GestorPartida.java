@@ -19,23 +19,18 @@ public class GestorPartida {
         this.random = new Random();
     }
 
-    /**
-     * Versión actualizada para permitir hasta 4 humanos + 1 IA.
-     */
     public void nuevaPartida(int numHumanos) {
         this.partida = new Partida();
         ArrayList<Jugador> jugadores = new ArrayList<Jugador>();
 
         String[] colores = {"Azul", "Rojo", "Verde", "Amarillo"};
-        
-        // Añadir los jugadores humanos configurados
+
         for (int i = 0; i < numHumanos && i < 4; i++) {
             Inventario inv = new Inventario();
             inv.añadirOActualizar(new Dado("normal", 1, 1, 6), 3);
             jugadores.add(new Pinguino("Jugador " + (i + 1), colores[i], 0, inv));
         }
 
-        // EL AÑADIDO: Añadir siempre a la IA Foca al final de la lista
         Foca cpu = new Foca("IA Foca", "Gris", 0);
         jugadores.add(cpu);
 
@@ -47,7 +42,7 @@ public class GestorPartida {
     public void nuevaPartidaPersonalizada(ArrayList<Pinguino> humanos) {
         this.partida = new Partida();
         ArrayList<Jugador> jugadores = new ArrayList<Jugador>();
-        
+
         jugadores.addAll(humanos);
 
         Foca cpu = new Foca("IA Foca", "Gris", 0);
@@ -58,15 +53,11 @@ public class GestorPartida {
         this.partida.setUltimoEvento("Partida personalizada preparada. Turno de " + jugadores.get(0).getNombre());
     }
 
-    /**
-     * Mantiene tu lógica original de tirarDado pero integrada.
-     */
     public String jugarTurnoHumano(Dado dado) {
         if (partida == null || partida.isFinalizada()) return "Partida no disponible.";
 
         Jugador actual = partida.getJugadorActual();
-        
-        // Si el humano debe saltar turno
+
         if (actual.debeSaltarTurno()) {
             actual.consumirTurnoPerdido();
             String msj = actual.getNombre() + " pierde su turno.";
@@ -75,16 +66,15 @@ public class GestorPartida {
             return msj;
         }
 
-        // Tirada y movimiento (Lógica original)
         int resultado = dado.tirar(random);
         gestorJugador.jugadorSeMueve(actual, resultado, partida.getTablero());
         String mensaje = actual.getNombre() + " avanza " + resultado + " casillas.";
 
-        // Ejecutar efectos si es Pingüino
         if (actual instanceof Pinguino) {
             Casilla casilla = partida.getTablero().getCasilla(actual.getPosicion());
             String msjCasilla = gestorTablero.ejecutarCasilla(partida, (Pinguino) actual, casilla);
             if (msjCasilla != null) mensaje += " " + msjCasilla;
+
             String choques = comprobarChoquesJugadores();
             if (!choques.isEmpty()) {
                 mensaje += " | " + choques;
@@ -92,16 +82,14 @@ public class GestorPartida {
         }
 
         partida.comprobarGanador();
+
         if (!partida.isFinalizada()) {
             siguienteTurno();
         }
-        
+
         return mensaje;
     }
 
-    /**
-     * El añadido para la lógica automática de la IA.
-     */
     public String ejecutarTurnoIA() {
         Jugador actual = partida.getJugadorActual();
         if (!(actual instanceof Foca)) return null;
@@ -115,9 +103,12 @@ public class GestorPartida {
         } else {
             int posicionAnterior = f.getPosicion();
             int pasos = random.nextInt(6) + 1;
+
             gestorJugador.jugadorSeMueve(f, pasos, partida.getTablero());
+
             int posicionNueva = f.getPosicion();
             Casilla casillaDestino = partida.getTablero().getCasilla(posicionNueva);
+
             if (casillaDestino instanceof Agujero) {
                 int destinoA = partida.getTablero().buscarAgujeroAnterior(posicionNueva);
                 f.setPosicion(destinoA);
@@ -128,8 +119,7 @@ public class GestorPartida {
             } else {
                 mensaje = "La foca (IA) se mueve " + pasos + " casillas.";
             }
-            
-            // Comprobar si pasa por encima de algún pingüino (sin contar la casilla final donde hay choque)
+
             for (Jugador j : partida.getJugadores()) {
                 if (j instanceof Pinguino) {
                     if (j.getPosicion() > posicionAnterior && j.getPosicion() < posicionNueva) {
@@ -138,7 +128,7 @@ public class GestorPartida {
                     }
                 }
             }
-            
+
             String choques = comprobarChoquesJugadores();
             if (!choques.isEmpty()) {
                 mensaje += " | " + choques;
@@ -152,10 +142,12 @@ public class GestorPartida {
 
     private String comprobarChoquesJugadores() {
         StringBuilder sb = new StringBuilder();
+
         for (int i = 0; i < partida.getJugadores().size(); i++) {
             for (int j = i + 1; j < partida.getJugadores().size(); j++) {
                 Jugador j1 = partida.getJugadores().get(i);
                 Jugador j2 = partida.getJugadores().get(j);
+
                 if (j1.getPosicion() > 0 && j1.getPosicion() == j2.getPosicion()) {
                     if (j1 instanceof Pinguino && j2 instanceof Pinguino) {
                         sb.append(gestorJugador.pingüinoGuerra((Pinguino) j1, (Pinguino) j2)).append(" ");
@@ -167,6 +159,7 @@ public class GestorPartida {
                 }
             }
         }
+
         return sb.toString().trim();
     }
 
@@ -174,9 +167,18 @@ public class GestorPartida {
         partida.siguienteTurno();
     }
 
-    // Métodos de acceso y persistencia originales
-    public Partida getPartida() { return this.partida; }
-    public void guardarPartida() { gestorBBDD.guardarBBDD(partida); }
+    public Partida getPartida() {
+        return this.partida;
+    }
+
+    public void guardarPartida(ArrayList<Integer> idsJugadors) {
+        gestorBBDD.guardarBBDD(partida, idsJugadors);
+    }
+
+    public void guardarPartida() {
+        System.out.println("❌ No se puede guardar la partida sin IDs reales de jugadores.");
+    }
+
     public void cargarPartida(int id) {
         Partida cargada = gestorBBDD.cargarBBDD(id);
         if (cargada != null) this.partida = cargada;
