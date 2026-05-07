@@ -1,35 +1,38 @@
-package controlador; // Pertenece al paquete "modelo"
+// Esta clase se encarga de gestionar el cifrado y descifrado de datos sensibles.
+// Utiliza el algoritmo AES con modo CBC y padding PKCS5.
+// Esto garantiza confidencialidad de la información almacenada en la base de datos.
 
-// Importaciones necesarias para trabajar con cifrado AES
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-import javax.crypto.spec.IvParameterSpec;
-import java.util.Base64;
+package controlador;
 
-// Clase encargada de encriptar y desencriptar texto
+// Importaciones necesarias
+import javax.crypto.Cipher; // Permite cifrar y descifrar
+import javax.crypto.spec.SecretKeySpec; // Representa la clave secreta
+import javax.crypto.spec.IvParameterSpec; // Vector de inicialización
+import java.util.Base64; // Codificación a texto
+
 public class Encriptador {
 
-    // Clave secreta (debe tener 16 bytes para AES-128)
+    // Clave secreta de 16 bytes (AES-128)
     private static final String CLAVE = "1234567890123456";
 
-    // Vector de inicialización (IV), también de 16 bytes
+    // Vector de inicialización (también 16 bytes)
     private static final String IV = "abcdef9876543210";
 
-    // Método privado que configura el cifrador
+    // Método que construye el objeto Cipher
     private static Cipher getCipher(int modo) throws Exception {
-        
-        // Se crea la clave AES a partir del String
+
+        // Se crea la clave a partir del String
         SecretKeySpec key = new SecretKeySpec(CLAVE.getBytes(), "AES");
-        
-        // Se crea el vector de inicialización (IV)
+
+        // Se crea el IV
         IvParameterSpec iv = new IvParameterSpec(IV.getBytes());
-        
-        // Se especifica el tipo de cifrado: AES en modo CBC con padding
+
+        // Se define el algoritmo
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        
-        // Se inicializa el cifrador en modo encriptar o desencriptar
+
+        // Inicializa el modo (encrypt/decrypt)
         cipher.init(modo, key, iv);
-        
+
         return cipher;
     }
 
@@ -37,35 +40,32 @@ public class Encriptador {
     public static String encriptar(String texto) {
         try {
             Cipher cipher = getCipher(Cipher.ENCRYPT_MODE);
-            
-            // Se convierte el texto en bytes y se encripta
+
+            // Convierte texto a bytes y lo cifra
             byte[] encrypted = cipher.doFinal(texto.getBytes());
-            
-            // Se codifica en Base64 para poder mostrarlo como texto
+
+            // Lo convierte a Base64
             return Base64.getEncoder().encodeToString(encrypted);
+
         } catch (Exception e) {
             e.printStackTrace();
-            
-            // En caso de error, devuelve el texto original
             return texto;
         }
     }
 
-    // Método para desencriptar texto
+    // Método para desencriptar
     public static String desencriptar(String texto) {
         try {
             Cipher cipher = getCipher(Cipher.DECRYPT_MODE);
-            
-            // Se decodifica el Base64 a bytes
+
             byte[] decoded = Base64.getDecoder().decode(texto);
-            
-            // Se desencripta y se convierte a String
+
             return new String(cipher.doFinal(decoded));
+
         } catch (Exception e) {
             e.printStackTrace();
-            
-            // En caso de error, devuelve el texto original
             return texto;
         }
     }
 }
+
