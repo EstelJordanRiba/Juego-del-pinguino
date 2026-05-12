@@ -159,11 +159,17 @@ public class GestorPartida { // Clase encargada de controlar la lógica de la pa
     private String comprobarChoquesJugadores() {
         // Método privado para gestionar encuentros en la misma casilla, Recorre la lista de jugadores buscando posiciones idénticas
         
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < partida.getJugadores().size(); i++) {
-            for (int j = i + 1; j < partida.getJugadores().size(); j++) {
-                Jugador j1 = partida.getJugadores().get(i);
-                Jugador j2 = partida.getJugadores().get(j);
+    	// Crea un StringBuilder sí está pensado para añadir, borrar o cambiar texto de forma más eficiente, sobre todo cuando lo haces muchas veces en un bucle.
+    	StringBuilder sb = new StringBuilder();
+    	// Recorre la lista de jugadores con el índice i
+    	for (int i = 0; i < partida.getJugadores().size(); i++) {
+    	    // Recorre los jugadores siguientes al actual para no repetir parejas y para evitar comparar un jugador consigo mismo
+    	    for (int j = i + 1; j < partida.getJugadores().size(); j++) {
+    	        // Guarda en j1 el jugador de la posición i
+    	        Jugador j1 = partida.getJugadores().get(i);
+
+    	        // Guarda en j2 el jugador de la posición j
+    	        Jugador j2 = partida.getJugadores().get(j);
 
                 // Si dos jugadores distintos están en la misma casilla (y no es la salida)
                 if (j1.getPosicion() > 0 && j1.getPosicion() == j2.getPosicion()) {

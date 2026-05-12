@@ -635,7 +635,7 @@ public class GestorBBDD { //Clase que se puede usar en todo el proyecto
             // ORDER BY DESC, ordena de mayor a menor
             // FETCH FIRST 10 ROWS ONLY, limita el resultado a los 10 mejores jugadores
 
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery(); //para insertar datos
             // Ejecutamos la consulta SQL
 
             int pos = 1;
@@ -1005,7 +1005,7 @@ public class GestorBBDD { //Clase que se puede usar en todo el proyecto
             psIns.setString(2, nickEncriptat);
             psIns.setString(3, Encriptador.encriptar("1234"));
 
-            psIns.executeUpdate();
+            psIns.executeUpdate(); //para actualizar datos
 
             return id;
 
@@ -1061,17 +1061,17 @@ public class GestorBBDD { //Clase que se puede usar en todo el proyecto
 
     private int[] convertirDadosParaBD(Pinguino p) {
         // Metodo que convierte el inventario de dados del pinguino en un array de numeros para la BD
-        int[] dados = {0, 0, 0};
+        int[] dados = {0, 0, 0}; //array para la BD
         int idx = 0;
 
-        int normals = p.getInv().getCantidad("normal");
-        int rapids = p.getInv().getCantidad("rapido");
-        int lents = p.getInv().getCantidad("lento");
+        int normals = p.getInv().getCantidad("normal"); //mirem la cantidad que te cada pinguino de dados normales
+        int rapids = p.getInv().getCantidad("rapido"); //mirem la cantidad que te cada pinguino de dados rapidos
+        int lents = p.getInv().getCantidad("lento");	//mirem la cantidad que te cada pinguino de dados lentos
 
         // Rellenamos el array con el valor maximo de cada dado
-        for (int i = 0; i < normals && idx < 3; i++) dados[idx++] = 6;
-        for (int i = 0; i < rapids && idx < 3; i++) dados[idx++] = 10;
-        for (int i = 0; i < lents && idx < 3; i++) dados[idx++] = 3;
+        for (int i = 0; i < normals && idx < 3; i++) dados[idx++] = 6; //dado normal maximo 6
+        for (int i = 0; i < rapids && idx < 3; i++) dados[idx++] = 10; //dado rapido maximo 10
+        for (int i = 0; i < lents && idx < 3; i++) dados[idx++] = 3;   //dado lents maximo 10
         return dados;
     }
 }

@@ -76,24 +76,34 @@ public class Partida {
 
     // --- GETTERS Y SETTERS (Acceso a los datos) ---
 
+ // Devuelve el tablero
     public Tablero getTablero() { return tablero; }
+    // Cambia el valor del tablero
     public void setTablero(Tablero tablero) { this.tablero = tablero; }
-
+    // Devuelve la lista de jugadores
     public ArrayList<Jugador> getJugadores() { return jugadores; }
+    // Cambia la lista de jugadores
     public void setJugadores(ArrayList<Jugador> jugadores) { this.jugadores = jugadores; }
-
+    // Devuelve el número de turnos
     public int getTurnos() { return turnos; }
+    // Cambia el número de turnos
     public void setTurnos(int turnos) { this.turnos = turnos; }
-
+    // Devuelve el índice del jugador actual
     public int getJugadorActualIndice() { return jugadorActual; }
+    // Cambia el índice del jugador actual
     public void setJugadorActualIndice(int jugadorActual) { this.jugadorActual = jugadorActual; }
-
+    // Devuelve si la partida ha finalizado
     public boolean isFinalizada() { return finalizada; }
+    // Cambia el estado de finalizada
     public void setFinalizada(boolean finalizada) { this.finalizada = finalizada; }
-
+    // Devuelve el ganador
     public Jugador getGanador() { return ganador; }
+    // Cambia el ganador
     public void setGanador(Jugador ganador) { this.ganador = ganador; }
-
+    // Devuelve el último evento
     public String getUltimoEvento() { return ultimoEvento; }
-    public void setUltimoEvento(String ultimoEvento) { this.ultimoEvento = ultimoEvento; }
-}
+    // Cambia el último evento
+    public void setUltimoEvento(String ultimoEvento) { this.ultimoEvento = ultimoEvento; 
+    
+    }
+    }

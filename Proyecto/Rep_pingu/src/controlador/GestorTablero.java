@@ -68,7 +68,7 @@ public class GestorTablero {
                     if (item == null) item = jugador.getInv().buscarPorNombre("rapido");
                     if (item == null) item = jugador.getInv().buscarPorNombre("lento");
 
-                    if (item != null) {
+                    if (item != null) { //Solo funciona si item no es null
                         item.restarCantidad(1);
                         jugador.getInv().eliminarVacios(); // Limpia el inventario si el objeto llegó a 0
                         mensaje = jugador.getNombre() + " pierde 1 objeto del inventario.";
